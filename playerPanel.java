@@ -49,7 +49,7 @@ public class playerPanel extends JPanel implements ActionListener{
             //controller.getInstance().changeCard("Homescreen");
 
             try {
-                URL url = new URL("https://LupeCruz:Lupescross1@api.challonge.com/v1/");
+                URL url = new URL(hidden.urlString);
 
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
