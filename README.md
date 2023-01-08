@@ -1,2 +1,2 @@
-# Pool League Organizer
+Run from controller.java
  

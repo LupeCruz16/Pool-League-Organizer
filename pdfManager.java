@@ -6,10 +6,10 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 public class pdfManager {
-    private int next;
+    private static int next;
 
     //user selecting files from device 
-    private void readInFiles(){
+    public static void readInFiles(){
 
         JFileChooser fileUpload = new JFileChooser();//creating file chooser
         fileUpload = new JFileChooser();//creating file chooser
@@ -41,7 +41,7 @@ public class pdfManager {
         }
     }
 
-    private void extractInfo(String doc){
+    private static void extractInfo(String doc){
 
         //strings for collecting information from each player
         String name, email, mon, tues, wed, thur, fri;
@@ -65,7 +65,7 @@ public class pdfManager {
        // System.out.println(fri);
     }
 
-    private String locate(String doc, String id, int idInt){
+    private static String locate(String doc, String id, int idInt){
         String result;
         next = idInt;
 

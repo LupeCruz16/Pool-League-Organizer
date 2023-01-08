@@ -1,12 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Method;
 import javax.swing.*;
-
-//testing 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class playerPanel extends JPanel implements ActionListener{
     
@@ -33,31 +27,13 @@ public class playerPanel extends JPanel implements ActionListener{
 
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == upload){
-            try{
-                Class<?> c = pdfManager.class;
-                Object o = c.getDeclaredConstructor().newInstance();
-
-                Method m = pdfManager.class.getDeclaredMethod("readInFiles");
-                m.setAccessible(true);
-                m.invoke(o);
-
-            }catch(Exception ex){//catching exception thrown for invalid document inputs
-                System.out.println("Exception thrown: " + ex);//printing error message 
-            } 
+            pdfManager.readInFiles();
+            
         }
         else if(e.getSource() == back){
-            //controller.getInstance().changeCard("Homescreen");
-
-            try {
-                URL url = new URL(hidden.urlString);
-
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
+            controller.getInstance().changeCard("Homescreen");
+            
+            tourneyManager.createTournament();
         }
 
     }//end of action performed 

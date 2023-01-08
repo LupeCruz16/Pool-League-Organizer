@@ -1,6 +1,5 @@
 import java.awt.CardLayout;
 import javax.swing.*;
-
 import java.awt.*;
 
 public class controller extends JPanel{
