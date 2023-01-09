@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -32,8 +31,8 @@ public class playerPanel extends JPanel implements ActionListener{
         }
         else if(e.getSource() == back){
             controller.getInstance().changeCard("Homescreen");
-            
-            tourneyManager.createTournament();
+
+            //tourneyManager.createTournament();
         }
 
     }//end of action performed 
