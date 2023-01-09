@@ -5,7 +5,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument; 
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import java.util.Collection;
+import java.util.HashMap;
+
 public class pdfManager {
+
+    private static HashMap<String, playerObject> players = new HashMap<String, playerObject>();
 
     //user selecting files from device 
     public static void readInFiles(){
@@ -38,8 +43,9 @@ public class pdfManager {
                 System.out.println("File cannot be opened: " + ex);//printing error message 
             } 
         }
-    }
+    }//end of read in files
 
+    //obtains each players information from a pdf of the pool league roster
     private static void extractInfo(String doc){
 
         String [] lines = doc.split("\n");//obtains every new lines in the document text
@@ -58,12 +64,25 @@ public class pdfManager {
             thur = parts[5].substring(1);
             fri = parts[6].substring(1);
 
-            setPlayerTime(mon);
-        }
-    }
+            //adding all information to players HashMap
+            players.put(name, new playerObject(name, email, mon, tues, wed, thur, fri));
 
-    private static void setPlayerTime(String avail){
+            modifyTime(name, 1);
+        }
+
+        Collection<playerObject> values = players.values();
         
-    }
+        for(playerObject player: values){
+            System.out.println(player.getName());
+        }
+    }//end of extract info
+
+    private static void modifyTime(String id, int day){
+        playerObject player = players.get(id);
+
+        System.out.println(player.getAvail(day));
+
+    }//end of modify time
+
 
 }//end of pdfManager
