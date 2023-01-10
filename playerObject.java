@@ -42,8 +42,8 @@ public class playerObject {
         return avail[day];
     }
 
-    public void setAvail(int pos, String day){
-        this.avail[pos] = day;
+    public void setAvail(int day, String time){
+        this.avail[day] = time;
     }
 
     public int getRank(){

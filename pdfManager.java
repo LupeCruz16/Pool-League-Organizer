@@ -66,6 +66,9 @@ public class pdfManager {
             players.put(name, new playerObject(name, email, mon, tues, wed, thur, fri));
 
             modifyTime(name, 0);
+
+            playerObject player = players.get(name);
+            System.out.println("Modified time: " + player.getAvail(0));
         }
 
     }//end of extract info
@@ -74,19 +77,54 @@ public class pdfManager {
     private static void modifyTime(String id, int day){
 
         playerObject player = players.get(id);//creating an instance of playerObject
-        String avail = player.getAvail(day);
-        int firstDigit, SecDigit;
+        String avail = player.getAvail(day);//storing the availability of the day into a string
+
+        String firstTime, secTime;//store the final times of the availabilities given
+        int firstDigit, secDigit, finalTime;//used to store integer values of string
 
         //System.out.println(player.getAvail(day));
 
-        //checking if first character of player availability is an integer
-        if(Character.isDigit(avail.charAt(0))){
-            firstDigit = Integer.parseInt(avail.substring(0, 1));
 
-            System.out.println("First int: " + firstDigit);
+        if(avail == "N/A"){//if no time available for that given day
+            player.setAvail(day, "0");//setting that days availability to 0 
+        }
+         else if(Character.isDigit(avail.charAt(0))){//if first character of player availability is an integer
+            firstDigit = Integer.parseInt(avail.substring(0, 1));//converts character into an integer
+
+            if(Character.isDigit(avail.charAt(1))){//if there is a second integer character followed 
+                secDigit = Integer.parseInt(avail.substring(1, 1));
+                finalTime = (firstDigit * 10) + secDigit;//converts time into double digits
+                firstTime = Integer.toString(finalTime * 100);//converts time into military time
+                
+            } else {//only one digit for the first time availability
+                firstTime = Integer.toString((firstDigit * 100) + 1200);//converts time into military time
+            }
+
+            System.out.println("First time: " + firstTime);
+
+            /* 
+            int dash = avail.indexOf("-");
+
+            if(Character.isDigit(avail.charAt(dash + 1))){//if first character of player availability is an integer
+                firstDigit = Integer.parseInt(avail.substring(dash + 1, 1));//converts character into an integer
+
+                if(Character.isDigit(avail.charAt(dash + 2))){//if there is a second integer character followed 
+                    secDigit = Integer.parseInt(avail.substring(dash + 2, 1));
+                    finalTime = (firstDigit * 10) + secDigit;//converts time into double digits
+                    secTime = Integer.toString(finalTime * 100);//converts time into military time
+                    
+                } else {//only one digit for the first time availability
+                    secTime = Integer.toString((firstDigit * 100) + 1200);//converts time into military time
+                }
+
+                player.setAvail(day, firstTime + "-" + secTime);
+
+            }else {
+                JOptionPane.showMessageDialog(null, "Invalid PDF Format. Please Enter a valid PDF");
+            }*/
 
         } else{
-            JOptionPane.showMessageDialog(null, "Invalid PDF Format");
+            JOptionPane.showMessageDialog(null, "Invalid PDF Format. Please Enter a valid PDF");
         }
 
     }//end of modify time
