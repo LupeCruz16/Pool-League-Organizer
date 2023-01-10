@@ -4,8 +4,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument; 
 import org.apache.pdfbox.text.PDFTextStripper;
-
-import java.util.Collection;
 import java.util.HashMap;
 
 public class pdfManager {
@@ -67,20 +65,29 @@ public class pdfManager {
             //adding all information to players HashMap
             players.put(name, new playerObject(name, email, mon, tues, wed, thur, fri));
 
-            modifyTime(name, 1);
+            modifyTime(name, 0);
         }
 
-        Collection<playerObject> values = players.values();
-        
-        for(playerObject player: values){
-            System.out.println(player.getName());
-        }
     }//end of extract info
 
+    //used to change the players availability to military time for easier comparisions and match making
     private static void modifyTime(String id, int day){
-        playerObject player = players.get(id);
 
-        System.out.println(player.getAvail(day));
+        playerObject player = players.get(id);//creating an instance of playerObject
+        String avail = player.getAvail(day);
+        int firstDigit, SecDigit;
+
+        //System.out.println(player.getAvail(day));
+
+        //checking if first character of player availability is an integer
+        if(Character.isDigit(avail.charAt(0))){
+            firstDigit = Integer.parseInt(avail.substring(0, 1));
+
+            System.out.println("First int: " + firstDigit);
+
+        } else{
+            JOptionPane.showMessageDialog(null, "Invalid PDF Format");
+        }
 
     }//end of modify time
 
