@@ -1,5 +1,6 @@
-import java.awt.CardLayout;
 import javax.swing.*;
+import javax.swing.SpringLayout.Constraints;
+
 import java.awt.*;
 
 public class controller extends JPanel{
@@ -10,6 +11,8 @@ public class controller extends JPanel{
 
     homePanel mainPanel;
     playerPanel playerPanel;
+    tourneyPanel tourneyPanel;
+    weeklyPanel weeklyPanel;
 
     public controller(){
         setLayout(new BorderLayout());
@@ -19,10 +22,14 @@ public class controller extends JPanel{
 
         mainPanel = new homePanel();
         playerPanel = new playerPanel();
+        tourneyPanel = new tourneyPanel();
+        weeklyPanel = new weeklyPanel();
         
         cards.add(mainPanel, "Homescreen");
         cards.add(playerPanel, "Upload Player Info");
-
+        cards.add(tourneyPanel, "View Bracket");
+        cards.add(weeklyPanel, "Weekly Matches");
+;
         add(cards);
         setVisible(true);
 

@@ -5,8 +5,8 @@ import javax.swing.*;
 
 public class homePanel extends JPanel implements ActionListener{
     
-    private JButton playerInfo, bracket;
-    private JLabel appName, blank, option, tab;
+    private JButton playerInfo, bracket, weekly, exit;
+    private JLabel appName, blank, option, tab, tab2;
 
     public homePanel(){
 
@@ -19,7 +19,7 @@ public class homePanel extends JPanel implements ActionListener{
         JPanel middle = new JPanel();
         JPanel button = new JPanel();
 
-        //Creating buttoms
+        //Creating buttons
         playerInfo = new JButton("Upload Players");//creating uploading photos button 
         playerInfo.addActionListener(this);//monitor if clicked 
         playerInfo.setPreferredSize(new Dimension(150, 35));
@@ -30,7 +30,17 @@ public class homePanel extends JPanel implements ActionListener{
         bracket.setPreferredSize(new Dimension(200, 35));
         bracket.setForeground(colorPalette.poolBlue);
 
-        //Creating Lables
+        weekly = new JButton("View Weekly Matches");
+        weekly.addActionListener(this);
+        weekly.setPreferredSize(new Dimension(200, 35));
+        weekly.setForeground(colorPalette.poolBlue);
+
+        exit = new JButton("Exit");
+        exit.addActionListener(this);
+        exit.setPreferredSize(new Dimension(100, 35));
+        exit.setForeground(colorPalette.poolBlue);
+
+        //Creating Labels
         appName = new JLabel("Welcome To The League Manager");
         appName.setFont(new Font("Arial", Font.BOLD, 40));//resizing text within label
         appName.setForeground(Color.white);
@@ -40,6 +50,7 @@ public class homePanel extends JPanel implements ActionListener{
         option.setForeground(Color.white);
 
         tab = new JLabel("    ");
+        tab2 = new JLabel("    ");
 
         blank = new JLabel("");
 
@@ -58,9 +69,13 @@ public class homePanel extends JPanel implements ActionListener{
 
         middle.add(playerInfo);
         middle.add(tab);
-        middle.add(bracket); 
+        middle.add(bracket);
+        middle.add(tab2);
+        middle.add(weekly);
 
         space2.add(blank);
+        button.add(exit);
+        
 
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
 
@@ -86,7 +101,13 @@ public class homePanel extends JPanel implements ActionListener{
             controller.getInstance().changeCard("Upload Player Info");
         }
         else if(e.getSource() == bracket){
-            System.out.println("Working");
+           controller.getInstance().changeCard("View Bracket");
+        }
+        else if(e.getSource() == weekly){
+            controller.getInstance().changeCard("Weekly Matches");
+        }
+        else if(e.getSource() == exit){
+            System.exit(0);
         }
 
     }//end of action preformed 

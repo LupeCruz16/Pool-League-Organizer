@@ -1,11 +1,11 @@
 import java.awt.event.*;
 import javax.swing.*;
 
-public class tourneyPanel extends JPanel implements ActionListener{
-
+public class weeklyPanel extends JPanel implements ActionListener{
+   
     private JButton back;
 
-    public tourneyPanel(){
+    public weeklyPanel(){
 
         JPanel main = new JPanel();
 
@@ -28,5 +28,4 @@ public class tourneyPanel extends JPanel implements ActionListener{
 
     }//End of actionPerformed
 
-
-}//End of tourneyPanel class
+} //End weeklyPanel class
