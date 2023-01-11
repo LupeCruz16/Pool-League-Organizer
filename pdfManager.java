@@ -7,7 +7,6 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import java.time.Duration;
 import java.time.LocalTime;
 
@@ -112,7 +111,6 @@ public class pdfManager {
                         int p2a1 = utility.getAvailTime(player2.getAvail(i), true);
                         int p2a2 = utility.getAvailTime(player2.getAvail(i), false);
 
-                        System.out.println("P2 Avail: " + p2a1 + "-" + p2a2);
                         if(p1a1 == 0 || p2a1 == 0){//if either player is not available that day skip the comparisions
                             continue;
                         } else {//if they are available try to generate a match
@@ -145,14 +143,17 @@ public class pdfManager {
         //checking if there is enough time for the match
         if(availStart.plus(matchDuration).isBefore(availEnd)){
             LocalTime matchStart = availStart;//will be used for match scheudling 
-            System.out.println("A match can be schedulted at " + matchStart + " between " + name1 + " and " + name2);
+            System.out.println("A match can be scheduled at " + matchStart + " between " + name1 + " and " + name2);
 
             //figuring out when the mach will be over for other matches to be held
             LocalTime matchEnd = matchStart.plus(matchDuration).plus(gracePeriod);
             
+            //removing the colon from matchEnds "13:30" to be military time as "1330"
+            String newStart = matchEnd.toString().replace(":", "");
+
             //modifying players times to be changed incase other matched can be held
-            players.get(name1).setAvail(day, matchEnd.toString() + "-" + p1a2);
-            players.get(name2).setAvail(day, matchEnd.toString() + "-" + p2a2);
+            players.get(name1).setAvail(day, newStart + "-" + p1a2);
+            players.get(name2).setAvail(day, newStart + "-" + p2a2);
 
         }
 
