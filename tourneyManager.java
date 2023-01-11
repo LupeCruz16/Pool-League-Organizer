@@ -35,7 +35,7 @@ public class tourneyManager {
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.setRequestProperty("Connect-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Authroization", "Basic" + hidden.CHA_Key);
+            connection.setRequestProperty("Authroization", "Basic" + hidden.CHA_KEY);
 
             //Send the request body
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
