@@ -86,7 +86,7 @@ public class homePanel extends JPanel implements ActionListener{
             controller.getInstance().changeCard("Upload Player Info");
         }
         else if(e.getSource() == bracket){
-            System.out.println("Working");
+            
         }
 
     }//end of action preformed 

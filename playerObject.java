@@ -1,24 +1,30 @@
 
 public class playerObject {
-    private final int SIZE = 5;//setting max availability array size to 5 for the five days of the week
-    private String[] avail = new String[SIZE];//availability array for all days of the week
+    public final static int DAYS = 5;//setting max availability array size to 5 for the five days of the week
+    private String[] avail = new String[DAYS];//availability array for all days of the week, can be changed for match generation
+    private String[] finalAvail = new String[DAYS];//contains availability but these times are not to be changed
     private String name, email;
-    private int rank;
-    private int score;
+    private int wins, losses;
 
     //constructor
     public playerObject(String name, String email, String mon, String tues, String wed, String thur, String fri){
         this.name = name;
         this.email = email;
  
+        //setting availability to gathered times of each day of the week
         avail[0] = mon;
         avail[1] = tues;
         avail[2] = wed;
         avail[3] = thur;
         avail[4] = fri;
-      
-        //this.rank = rank;
-        //this.score = score;
+
+        //initializing final availability to 0s 
+        for(int i = 0; i < DAYS; i++){
+            finalAvail[i] = "0";
+        }
+        
+        wins = 0;
+        losses = 0;
     }//end of constructor
 
     //getter and setter methods 
@@ -46,20 +52,28 @@ public class playerObject {
         this.avail[day] = time;
     }
 
-    public int getRank(){
-        return rank;
+    public String getFinalAvail(int day){
+        return finalAvail[day];
     }
 
-    public void setRank(int rank){
-        this.rank = rank;
+    public void setFinalAvail(int day, String time){
+        this.finalAvail[day] = time;
     }
 
-    public int getScore(){
-        return score;
+    public int getWins(){
+        return wins;
     }
 
-    public void setScore(int score){
-        this.score = score;
+    public void setWins(int wins){
+        this.wins = wins;
+    }
+
+    public int getLosses(){
+        return losses;
+    }
+
+    public void setLosses(int losses){
+        this.losses = losses;
     }
 
 

@@ -4,9 +4,12 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument; 
 import org.apache.pdfbox.text.PDFTextStripper;
-
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map.Entry;
+
+import java.time.Duration;
+import java.time.LocalTime;
 
 public class pdfManager {
 
@@ -32,10 +35,10 @@ public class pdfManager {
                 PDFTextStripper pdfTextStripper = new PDFTextStripper();//obtain text
                 String docText = pdfTextStripper.getText(pdfDocument);//turning text into string 
 
-                System.out.println(docText);
+                extractInfo(docText);//extracts and stores all player information into their objects
+                militaryConv();//converts all stored players availability into military time
 
-                extractInfo(docText);
-                militaryConv();
+                matchGeneration();//generate matches for all players
 
                 pdfDocument.close();//closing document
                 fis.close();//closing file input stream
@@ -78,73 +81,82 @@ public class pdfManager {
         
         for(playerObject player : values){//itterates through each player
             //changes the collected time into military time
-            modifyTime(player, 0);
-            modifyTime(player, 1);
-            modifyTime(player, 2);
-            modifyTime(player, 3);
-            modifyTime(player, 4);
+            utility.modifyTime(player, 0);
+            utility.modifyTime(player, 1);
+            utility.modifyTime(player, 2);
+            utility.modifyTime(player, 3);
+            utility.modifyTime(player, 4);
 
-            System.out.println(player.getAvail(0));
         }
     }//end of military conversion
 
-    //used to change the players availability to military time for easier comparisions and match making
-    private static void modifyTime(playerObject player, int day){
+    //will find possible matches and add them into the Challonge API as found
+    private static void matchGeneration(){
 
-        //playerObject player = players.get(id);//creating an instance of playerObject
-        String avail = player.getAvail(day);//storing the availability of the day into a string
+        for(Entry<String, playerObject> entry1 : players.entrySet()){//itterates through HashMap with one player
+            playerObject player1 = entry1.getValue();//getting one player first
+            String name1 = player1.getName();//obtaining player1s name
 
-        String firstTime, secTime;//store the final times of the availabilities given
-        int firstDigit, secDigit, finalTime, minutes;//used to store integer values of string
-        int dash = avail.indexOf("-");//obtain the dash location for second end time
+            for(Entry<String, playerObject> entry2 : players.entrySet()){//itterates with following player
+                playerObject player2 = entry2.getValue();//getting second player
+                String name2 = player2.getName();//obtaining player2s name
 
-        if(dash == -1){//if no time available for that given day ex "N/A"
-            player.setAvail(day, "0");//setting that days availability to 0 
-        }
-        else if(Character.isDigit(avail.charAt(0))){//if first character of player availability is an integer
-            firstDigit = Integer.parseInt(avail.substring(0, 1));//converts character into an integer
-
-            if(Character.isDigit(avail.charAt(1))){//if there is a second integer character followed 
-                secDigit = Integer.parseInt(avail.substring(1, 2));//converting second digit into an integer
-                minutes = utility.minutesFinder(avail, dash, true);//if first time has a colon in the time such as "12:30"
-
-                finalTime = (firstDigit * 10) + secDigit;//converts time into double digits
-                firstTime = Integer.toString((finalTime * 100) + minutes);//converts time into military time
-                
-            } else {//only one digit for the first time availability
-                minutes = utility.minutesFinder(avail, dash, true);//if this single digit time has a colon such as "2:30"
-
-                firstTime = Integer.toString((firstDigit * 100) + 1200 + minutes);//converts time into military time
-            }
-
-            //checking the availability after the dash
-            if(Character.isDigit(avail.charAt(dash + 1))){//if first character of player availability is an integer
-                firstDigit = Integer.parseInt(avail.substring(dash + 1, dash + 2));//converts character into an integer
-
-                if(Character.isDigit(avail.charAt(dash + 2))){//if there is a second integer character followed 
-                    secDigit = Integer.parseInt(avail.substring(dash + 2, dash + 3));//converting second digit into an integer
-                    minutes = utility.minutesFinder(avail, dash, false);//if first time has a colon in the time such as "12:30"
-
-                    finalTime = (firstDigit * 10) + secDigit;//converts time into double digits
-                    secTime = Integer.toString(finalTime * 100 + minutes);//converts time into military time
+                if(!player1.equals(player2)){//aoiding comparing the same player
                     
-                } else {//only one digit for the first time availability
-                    minutes = utility.minutesFinder(avail, dash, false);//if first time has a colon in the time such as "12:30"
+                    for(int i = 0; i < playerObject.DAYS; i++){//itterates through all of the players availability
 
-                    secTime = Integer.toString((firstDigit * 100) + 1200 + minutes);//converts time into military time
+                        //p1a1 stands for player 1 time availability 1 or start time
+                        int p1a1 = utility.getAvailTime(player1.getAvail(i), true);
+                        int p1a2 = utility.getAvailTime(player1.getAvail(i), false);
+
+                        int p2a1 = utility.getAvailTime(player2.getAvail(i), true);
+                        int p2a2 = utility.getAvailTime(player2.getAvail(i), false);
+
+                        System.out.println("P2 Avail: " + p2a1 + "-" + p2a2);
+                        if(p1a1 == 0 || p2a1 == 0){//if either player is not available that day skip the comparisions
+                            continue;
+                        } else {//if they are available try to generate a match
+                            matchValidity(i, name1, p1a1, p1a2, name2, p2a1, p2a2);//finds if a match can be generated between the players
+                        }
+
+                    }
                 }
-
-                player.setAvail(day, firstTime + "-" + secTime);//setting player availability to new military time converted time
-
-            }else {
-                JOptionPane.showMessageDialog(null, "Invalid PDF Format. Please Enter a valid PDF");
             }
+        }
+    }//end of match generation
 
-        } else{
-            JOptionPane.showMessageDialog(null, "Invalid PDF Format. Please Enter a valid PDF");
+    public static void matchValidity(int day, String name1, int p1a1, int p1a2, String name2, int p2a1, int p2a2){
+
+        //seperating the military time conversion into hours and minutes for easier comparision 
+        LocalTime player1Start = LocalTime.of(p1a1 / 100, p1a1 % 100);
+        LocalTime player1End = LocalTime.of(p1a2 / 100, p1a2 % 100);
+
+        LocalTime player2Start = LocalTime.of(p2a1 / 100, p2a1 % 100);
+        LocalTime player2End = LocalTime.of(p2a2 / 100, p2a2 % 100);
+
+        //adding the duration of each match into a duration variable also accounting for a grace period
+        Duration matchDuration = Duration.ofMinutes(20);
+        Duration gracePeriod = Duration.ofMinutes(10);
+
+        //finding overlapping time to schedule a match
+        LocalTime availStart = player1Start.isAfter(player2Start) ? player1Start : player2Start;
+        LocalTime availEnd = player1End.isBefore(player2End) ? player1End : player2End;
+
+        //checking if there is enough time for the match
+        if(availStart.plus(matchDuration).isBefore(availEnd)){
+            LocalTime matchStart = availStart;//will be used for match scheudling 
+            System.out.println("A match can be schedulted at " + matchStart + " between " + name1 + " and " + name2);
+
+            //figuring out when the mach will be over for other matches to be held
+            LocalTime matchEnd = matchStart.plus(matchDuration).plus(gracePeriod);
+            
+            //modifying players times to be changed incase other matched can be held
+            players.get(name1).setAvail(day, matchEnd.toString() + "-" + p1a2);
+            players.get(name2).setAvail(day, matchEnd.toString() + "-" + p2a2);
+
         }
 
-    }//end of modify time
 
+    }//end of match validity
 
 }//end of pdfManager
