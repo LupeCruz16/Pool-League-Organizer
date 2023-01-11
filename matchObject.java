@@ -30,7 +30,7 @@ public class matchObject {
         this.player2 = player2;
      }
 
-     public String getDay(int day){
+     public String getDay(){
         
          switch(day){
             case 0:
@@ -59,6 +59,5 @@ public class matchObject {
      public void setTime(int time){
         this.time = time;
      }
-
      
 }//End of machObject class
