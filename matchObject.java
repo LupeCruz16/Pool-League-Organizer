@@ -1,15 +1,14 @@
 public class matchObject {
 
-     private String player1, player2, day;
-     private int time;
+     private String player1, player2;
+     private int time, day;
 
      //Constructor
-     public matchObject(String player1, String player2, String day, int time){
+     public matchObject(String player1, String player2, int day, int time){
 
         this.player1 = player1;
         this.player2 = player2;
         this.time = time;
-        this.day = day;
 
      }//End of constructor
 
@@ -22,8 +21,22 @@ public class matchObject {
         return player2;
      }
 
-     public String getDay(){
-        return day;
+     public String getDay(int day){
+        
+         switch(day){
+            case 0:
+               return "mon";
+            case 1:
+               return "tues";
+            case 2:
+               return "wed";
+            case 3:
+               return "thurs";
+            case 4:
+               return "fri";
+            default:
+               return "This isnt supposed to happen.";
+         }
      }
 
      public int getTime(){
@@ -43,11 +56,7 @@ public class matchObject {
         this.time = time;
      }
 
-     public void setDay(String day){
+     public void setDay(int day){
         this.day = day;
      }
-
-
-
-    
 }//End of machObject class
