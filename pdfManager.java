@@ -111,10 +111,12 @@ public class pdfManager {
                         int p2a1 = utility.getAvailTime(player2.getAvail(i), true);
                         int p2a2 = utility.getAvailTime(player2.getAvail(i), false);
 
-                        if(p1a1 == 0 || p2a1 == 0){//if either player is not available that day skip the comparisions
-                            continue;
-                        } else {//if they are available try to generate a match
-                            matchValidity(i, name1, p1a1, p1a2, name2, p2a1, p2a2);//finds if a match can be generated between the players
+                        if(p1a1 > 0 && p2a1 > 0){//if either player is available that day try to generate a match
+                            //if a match was generated between the players move to next player
+                            if(matchValidity(i, name1, p1a1, p1a2, name2, p2a1, p2a2)){
+                                i = playerObject.DAYS;//break out of for loop
+                            }
+
                         }
 
                     }
@@ -123,7 +125,7 @@ public class pdfManager {
         }
     }//end of match generation
 
-    public static void matchValidity(int day, String name1, int p1a1, int p1a2, String name2, int p2a1, int p2a2){
+    public static boolean matchValidity(int day, String name1, int p1a1, int p1a2, String name2, int p2a1, int p2a2){
 
         //seperating the military time conversion into hours and minutes for easier comparision 
         LocalTime player1Start = LocalTime.of(p1a1 / 100, p1a1 % 100);
@@ -143,7 +145,7 @@ public class pdfManager {
         //checking if there is enough time for the match
         if(availStart.plus(matchDuration).isBefore(availEnd)){
             LocalTime matchStart = availStart;//will be used for match scheudling 
-            System.out.println("A match can be scheduled at " + matchStart + " between " + name1 + " and " + name2);
+            System.out.println("A match can be scheduled at " + matchStart + " on " + day + " between " + name1 + " and " + name2);
 
             //figuring out when the mach will be over for other matches to be held
             LocalTime matchEnd = matchStart.plus(matchDuration).plus(gracePeriod);
@@ -155,8 +157,9 @@ public class pdfManager {
             players.get(name1).setAvail(day, newStart + "-" + p1a2);
             players.get(name2).setAvail(day, newStart + "-" + p2a2);
 
+            return true;
         }
-
+        return false;
 
     }//end of match validity
 
