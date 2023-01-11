@@ -1,18 +1,19 @@
 import java.io.File;
 import java.io.FileInputStream;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.pdfbox.pdmodel.PDDocument; 
-import org.apache.pdfbox.text.PDFTextStripper;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map.Entry;
-import java.time.Duration;
-import java.time.LocalTime;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 public class pdfManager {
 
-    private static HashMap<String, playerObject> players = new HashMap<String, playerObject>();
+    static HashMap<String, playerObject> players = new HashMap<String, playerObject>();//used to store all players
+    static ArrayList<matchObject> matches = new ArrayList<>();//used to generate matches
 
     //user selecting files from device 
     public static void readInFiles(){
@@ -35,8 +36,9 @@ public class pdfManager {
                 String docText = pdfTextStripper.getText(pdfDocument);//turning text into string 
 
                 extractInfo(docText);//extracts and stores all player information into their objects
-                militaryConv();//converts all stored players availability into military time
 
+                militaryConv();//converts all stored players availability into military time
+                matchPairGen();//generates a unique list of pair players 
                 matchGeneration();//generate matches for all players
 
                 pdfDocument.close();//closing document
@@ -59,7 +61,7 @@ public class pdfManager {
             String[] parts = line.split(",");//splits the lines based on commas
 
             //sections everything out
-            name = parts[0].substring(1);
+            name = parts[0];
             email = parts[1].substring(1);
             mon = parts[2].substring(1);
             tues = parts[3].substring(1);
@@ -89,78 +91,71 @@ public class pdfManager {
         }
     }//end of military conversion
 
+    //generates a unique array list of match objects that stores players in pairs to verify if a match can be made
+    private static void matchPairGen(){
+        
+        String[] names = players.keySet().toArray(new String[players.size()]);//creates an array of strings with players names
+
+        for(int i = 0; i < players.size(); i++){//itterates through the entire player HashMap
+            for(int j = i + 1; j < players.size(); j++){//goes through the following player after i 
+                matches.add(new matchObject(names[i], names[j], 0, 0));//adding the pair into the match object
+            }
+        }
+
+    }//end of military conversion
+
     //will find possible matches and add them into the Challonge API as found
     private static void matchGeneration(){
+        boolean matchFound;//boolean used to break out of for loop when match was found
 
-        for(Entry<String, playerObject> entry1 : players.entrySet()){//itterates through HashMap with one player
-            playerObject player1 = entry1.getValue();//getting one player first
-            String name1 = player1.getName();//obtaining player1s name
+        for(int i = 0; i < matches.size(); i++){//itterates through unique array list of matches
+            matchObject match = matches.get(i);//obtaining a single match that contains two player names
+            
+            matchFound = false;//initialize to false
+            for(int j = 0; !matchFound && j < playerObject.DAYS; j++){//itterates through all of the players availability
 
-            for(Entry<String, playerObject> entry2 : players.entrySet()){//itterates with following player
-                playerObject player2 = entry2.getValue();//getting second player
-                String name2 = player2.getName();//obtaining player2s name
+                //p1a1 stands for player 1 time availability 1 or start time
+                int p1a1 = utility.getAvailTime(players.get(match.getPlayer1()).getAvail(j), true);
+                int p1a2 = utility.getAvailTime(players.get(match.getPlayer1()).getAvail(j), false);
 
-                if(!player1.equals(player2)){//aoiding comparing the same player
-                    
-                    for(int i = 0; i < playerObject.DAYS; i++){//itterates through all of the players availability
+                int p2a1 = utility.getAvailTime(players.get(match.getPlayer2()).getAvail(j), true);
+                int p2a2 = utility.getAvailTime(players.get(match.getPlayer2()).getAvail(j), false);
 
-                        //p1a1 stands for player 1 time availability 1 or start time
-                        int p1a1 = utility.getAvailTime(player1.getAvail(i), true);
-                        int p1a2 = utility.getAvailTime(player1.getAvail(i), false);
+                if(p1a1 > 0 && p2a1 > 0){//if either player is available that day try to generate a match
 
-                        int p2a1 = utility.getAvailTime(player2.getAvail(i), true);
-                        int p2a2 = utility.getAvailTime(player2.getAvail(i), false);
+                    //checking to ensure that another match can be added to each players match counter
+                    if(players.get(match.getPlayer1()).getMatchCounter() < playerObject.MAX_MATCHES &&
+                       players.get(match.getPlayer2()).getMatchCounter() < playerObject.MAX_MATCHES){
 
-                        if(p1a1 > 0 && p2a1 > 0){//if either player is available that day try to generate a match
-                            //if a match was generated between the players move to next player
-                            if(matchValidity(i, name1, p1a1, p1a2, name2, p2a1, p2a2)){
-                                i = playerObject.DAYS;//break out of for loop
-                            }
+                        //if a match was generated between the players move to next player
+                        if(utility.matchValidity(j, match.getPlayer1(), p1a1, p1a2, match.getPlayer2(), p2a1, p2a2)){
+
+                            //System.out.println(players.get(match.getPlayer1()).getName() + players.get(match.getPlayer1()).getAvail(j));
+
+                            //updating the amount of matches that each player has scheduled
+                            players.get(match.getPlayer1()).incrementMatchCounter();
+                            players.get(match.getPlayer2()).incrementMatchCounter();
+                            matchFound = true;//set boolean to true as match was generated
 
                         }
-
                     }
                 }
             }
         }
+
     }//end of match generation
 
-    public static boolean matchValidity(int day, String name1, int p1a1, int p1a2, String name2, int p2a1, int p2a2){
+    //resets players availabilities
+    private static void resetAvail(){
+        Collection<playerObject> values = players.values();//obtains all players stored within the HashMap of players
+        
+        for(playerObject player : values){//itterates through each player
+          
+            for(int i = 0; i < playerObject.DAYS; i++){//itterates through all days of the players availability
+                player.setAvail(i, player.getFinalAvail(i));//resetting to original military converted time
+            }
 
-        //seperating the military time conversion into hours and minutes for easier comparision 
-        LocalTime player1Start = LocalTime.of(p1a1 / 100, p1a1 % 100);
-        LocalTime player1End = LocalTime.of(p1a2 / 100, p1a2 % 100);
-
-        LocalTime player2Start = LocalTime.of(p2a1 / 100, p2a1 % 100);
-        LocalTime player2End = LocalTime.of(p2a2 / 100, p2a2 % 100);
-
-        //adding the duration of each match into a duration variable also accounting for a grace period
-        Duration matchDuration = Duration.ofMinutes(20);
-        Duration gracePeriod = Duration.ofMinutes(10);
-
-        //finding overlapping time to schedule a match
-        LocalTime availStart = player1Start.isAfter(player2Start) ? player1Start : player2Start;
-        LocalTime availEnd = player1End.isBefore(player2End) ? player1End : player2End;
-
-        //checking if there is enough time for the match
-        if(availStart.plus(matchDuration).isBefore(availEnd)){
-            LocalTime matchStart = availStart;//will be used for match scheudling 
-            System.out.println("A match can be scheduled at " + matchStart + " on " + day + " between " + name1 + " and " + name2);
-
-            //figuring out when the mach will be over for other matches to be held
-            LocalTime matchEnd = matchStart.plus(matchDuration).plus(gracePeriod);
-            
-            //removing the colon from matchEnds "13:30" to be military time as "1330"
-            String newStart = matchEnd.toString().replace(":", "");
-
-            //modifying players times to be changed incase other matched can be held
-            players.get(name1).setAvail(day, newStart + "-" + p1a2);
-            players.get(name2).setAvail(day, newStart + "-" + p2a2);
-
-            return true;
         }
-        return false;
-
-    }//end of match validity
+    }//end of reset availability
 
 }//end of pdfManager

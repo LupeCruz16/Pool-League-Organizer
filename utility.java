@@ -1,4 +1,6 @@
 import javax.swing.JOptionPane;
+import java.time.Duration;
+import java.time.LocalTime;
 
 public class utility {
 
@@ -112,5 +114,48 @@ public class utility {
 
         return time;
     }//end of get available time
+
+    public static boolean matchValidity(int day, String name1, int p1a1, int p1a2, String name2, int p2a1, int p2a2){
+
+        //seperating the military time conversion into hours and minutes for easier comparision 
+        LocalTime player1Start = LocalTime.of(p1a1 / 100, p1a1 % 100);
+        LocalTime player1End = LocalTime.of(p1a2 / 100, p1a2 % 100);
+
+        LocalTime player2Start = LocalTime.of(p2a1 / 100, p2a1 % 100);
+        LocalTime player2End = LocalTime.of(p2a2 / 100, p2a2 % 100);
+
+        //adding the duration of each match into a duration variable also accounting for a grace period
+        Duration matchDuration = Duration.ofMinutes(20);
+        Duration gracePeriod = Duration.ofMinutes(10);
+
+        //finding overlapping time to schedule a match
+        LocalTime availStart = player1Start.isAfter(player2Start) ? player1Start : player2Start;
+        LocalTime availEnd = player1End.isBefore(player2End) ? player1End : player2End;
+
+        //checking if there is enough time for the match
+        if(availStart.plus(matchDuration).isBefore(availEnd)){
+            LocalTime matchStart = availStart;//will be used for match scheudling 
+
+            //temp string print until match has been placed
+            System.out.println("A match can be scheduled at " + matchStart + " on " + day + " between " + name1 + " and " + name2);
+
+            //figuring out when the mach will be over for other matches to be held
+            LocalTime matchEnd = matchStart.plus(matchDuration).plus(gracePeriod);
+            
+            //removing the colon from matchEnds "13:30" to be military time as "1330"
+            String newStart = matchEnd.toString().replace(":", "");
+
+            //modifying players times to be changed incase other matched can be held
+            pdfManager.players.get(name1).setAvail(day, newStart + "-" + p1a2);
+            pdfManager.players.get(name2).setAvail(day, newStart + "-" + p2a2);
+
+
+            ///////future issue of changing the availability and have to change back to begining matches
+            return true;
+        }
+        return false;
+
+    }//end of match validity
+
 
 }//end of utility

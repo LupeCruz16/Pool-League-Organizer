@@ -30,7 +30,7 @@ public class matchObject {
         this.player2 = player2;
      }
 
-     public String getDay(int day){
+     public String getDay(){
         
          switch(day){
             case 0:
