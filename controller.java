@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.SpringLayout.Constraints;
-
 import java.awt.*;
 
 public class controller extends JPanel{
