@@ -59,6 +59,5 @@ public class matchObject {
      public void setTime(int time){
         this.time = time;
      }
-
      
 }//End of machObject class
