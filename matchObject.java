@@ -4,11 +4,12 @@ public class matchObject {
      private int time, day;
 
      //Constructor
-     public matchObject(String player1, String player2, int day, int time){
+     public matchObject(String player1, String player2, int time, int day){
 
         this.player1 = player1;
         this.player2 = player2;
         this.time = time;
+        this.day = day;
 
      }//End of constructor
 
@@ -25,17 +26,17 @@ public class matchObject {
         
          switch(day){
             case 0:
-               return "mon";
+               return "Monday";
             case 1:
-               return "tues";
+               return "Tuesday";
             case 2:
-               return "wed";
+               return "Wednesday";
             case 3:
-               return "thurs";
+               return "Thursday";
             case 4:
-               return "fri";
+               return "Friday";
             default:
-               return "This isnt supposed to happen.";
+               return "Invalid Day.";
          }
      }
 
