@@ -1,6 +1,15 @@
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+//Basic Information of this object
+//Contains:
+//          -player1 and player2 for the match opponents
+//          -table meant to be used as an identifyer of what pool table was going to be used 
+//          -matchDay for an easy view of what day the match was scheduled for
+//          -matchTime for an easy view of what time the match was scheduled for
+//Goal: 
+//          -Maintain all match information in an easy to find and retreive way 
+//  
 public class matchObject {
 
      private String player1, player2;

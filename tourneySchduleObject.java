@@ -1,6 +1,14 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+//Basic Information of this object
+//Contains:
+//          -scheduledDay for the day a match was made
+//          -an array list of match objects to maintain all the matches created that day
+//          -todaysMatches to see if any matches were added to this day and help with weekly match views 
+//Goal: 
+//          -Maintain matches generated for a day under one object to provide easier retrieval and viewing of single or 
+//           weekly match viewing 
 public class tourneySchduleObject {
 
     private LocalDate scheduledDay;
