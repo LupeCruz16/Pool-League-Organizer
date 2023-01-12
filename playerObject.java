@@ -7,7 +7,7 @@ public class playerObject {
 
     //variables for basic fields
     private String name, email;
-    private int wins, losses, matchCounter;
+    private int wins, losses, matchCounter, weeklyMatchCount;
 
     //constructor
     public playerObject(String name, String email, String mon, String tues, String wed, String thur, String fri){
@@ -27,6 +27,7 @@ public class playerObject {
         }
         
         matchCounter = 0;
+        weeklyMatchCount = 0;
         wins = 0;
         losses = 0;
     }//end of constructor
@@ -78,6 +79,18 @@ public class playerObject {
 
     public int getMatchCounter(){
         return matchCounter;
+    }
+
+    public void resetWeeklyMatchCount(){
+        this.weeklyMatchCount = 0;
+    }
+
+    public void incrementWeeklyMatchCoun(){
+        this.weeklyMatchCount++;
+    }
+
+    public int getWeeklyMatchCoun(){
+        return weeklyMatchCount;
     }
 
     public void setWins(int wins){

@@ -15,37 +15,51 @@ public class tourneyManager {
 
         for(int i = 0; i < pdfManager.matches.size(); i++){//itterates through unique array list of matches
             matchObject match = pdfManager.matches.get(i);//obtaining a single match that contains two player names
+            String p1 = match.getPlayer1();//collecting players names into strings 
+            String p2 = match.getPlayer2();
 
             matchFound = false;//initialize to false
             for(int j = 0; !matchFound && j < playerObject.DAYS; j++){//itterates through all of the players availability
-                LocalDate start = dates[j];//contains all days that are playable in the tournament and calls them one at a time
 
                 //p1a1 stands for player 1 time availability 1 or start time
-                int p1a1 = utility.getAvailTime(pdfManager.players.get(match.getPlayer1()).getAvail(j), true);
-                int p1a2 = utility.getAvailTime(pdfManager.players.get(match.getPlayer1()).getAvail(j), false);
+                int p1a1 = utility.getAvailTime(pdfManager.players.get(p1).getAvail(j), true);
+                int p1a2 = utility.getAvailTime(pdfManager.players.get(p1).getAvail(j), false);
 
-                int p2a1 = utility.getAvailTime(pdfManager.players.get(match.getPlayer2()).getAvail(j), true);
-                int p2a2 = utility.getAvailTime(pdfManager.players.get(match.getPlayer2()).getAvail(j), false);
+                int p2a1 = utility.getAvailTime(pdfManager.players.get(p2).getAvail(j), true);
+                int p2a2 = utility.getAvailTime(pdfManager.players.get(p2).getAvail(j), false);
 
                 if(p1a1 > 0 && p2a1 > 0){//if either player is available that day try to generate a match
 
                     //checking to ensure that another match can be added to each players match counter
-                    if(pdfManager.players.get(match.getPlayer1()).getMatchCounter() < playerObject.MAX_MATCHES &&
-                    pdfManager.players.get(match.getPlayer2()).getMatchCounter() < playerObject.MAX_MATCHES){
+                    if(pdfManager.players.get(p1).getMatchCounter() <= playerObject.MAX_MATCHES &&
+                       pdfManager.players.get(p2).getMatchCounter() <= playerObject.MAX_MATCHES){
+
+                        //checking to ensure that the players weekly match limit has not been reached
+                        if(pdfManager.players.get(p1).getWeeklyMatchCoun() < enteredInfo.getMaxWeeklyMatches() &&
+                        pdfManager.players.get(p2).getWeeklyMatchCoun() < enteredInfo.getMaxWeeklyMatches()){
 
                         //if a match was generated between the players move to next player
-                        if(utility.matchValidity(start, j, match.getPlayer1(), p1a1, p1a2, match.getPlayer2(), p2a1, p2a2)){
+                        if(utility.matchValidity(dates[j], j, p1, p1a1, p1a2, p2, p2a1, p2a2)){
 
                             //updating the amount of matches that each player has scheduled
-                            pdfManager.players.get(match.getPlayer1()).incrementMatchCounter();
-                            pdfManager.players.get(match.getPlayer2()).incrementMatchCounter();
+                            pdfManager.players.get(p1).incrementMatchCounter();
+                            pdfManager.players.get(p2).incrementMatchCounter();
+
+                            //updating thier weekly match counter
+                            pdfManager.players.get(p1).incrementWeeklyMatchCoun();
+                            pdfManager.players.get(p2).incrementWeeklyMatchCoun();
+
                             matchFound = true;//set boolean to true as match was generated
 
                         }
+
+                    }
                     }
                 }
             }
             
+            pdfManager.players.get(p1).resetWeeklyMatchCount();
+            pdfManager.players.get(p2).resetWeeklyMatchCount();
             resetAvail();//reset each players availability for further match generation
         }
 
@@ -57,9 +71,15 @@ public class tourneyManager {
         
         for(playerObject player : values){//itterates through each player
           
+            //System.out.println("Before time reset");
+            //debug.displayPlayer(player.getName());
+
             for(int i = 0; i < playerObject.DAYS; i++){//itterates through all days of the players availability
                 player.setAvail(i, player.getFinalAvail(i));//resetting to original military converted time
             }
+
+            //System.out.println("After time reset");
+            //debug.displayPlayer(player.getName());
 
         }
     }//end of reset availability
