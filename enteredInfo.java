@@ -7,6 +7,8 @@ public class enteredInfo {
 
     static final LocalDate END_DATE = LocalDate.of(2023, 1, 31);
 
+    //include pool table and tie to match object
+
     static final int MAX_MATCHES = 15;
 
     //obtains the max weekly matches that a player can have to continue and have matches throughout the tournament

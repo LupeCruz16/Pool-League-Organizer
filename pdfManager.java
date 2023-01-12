@@ -108,6 +108,14 @@ public class pdfManager {
 
     }//end of military conversion
 
+    //deletes a match from matches array list to show that a match has been made from the unique list of pairings
+    public static void matchDeletion(String player1, String player2){
+
+        //if both names are found within the array list of matches then remove the match
+        matches.removeIf(match -> (match.getPlayer1().equals(player1) && match.getPlayer2().equals(player2)) ||
+        (match.getPlayer1().equals(player2) && match.getPlayer1().equals(player1)));
+    }//end of match deletion
+
     //will generate all possible days that matches can be held 
     public static void matchDayGen(){//add after LocalDate startDay, LocalDate endDay
 
