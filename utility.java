@@ -35,9 +35,7 @@ public class utility {
     //used to change the players availability to military time for easier comparisions and match making
     public static void modifyTime(playerObject player, int day){
 
-        //playerObject player = players.get(id);//creating an instance of playerObject
         String avail = player.getAvail(day);//storing the availability of the day into a string
-
         String firstTime, secTime;//store the final times of the availabilities given
         int firstDigit, secDigit, finalTime, minutes;//used to store integer values of string
         int dash = avail.indexOf("-");//obtain the dash location for second end time
@@ -91,6 +89,31 @@ public class utility {
 
     }//end of modify time
 
+    //takes in given local time that is in a format of "14:30" and returns "2:30"
+    public static String convertToStandardTime(LocalTime time){
+        String finalTime;
+        int tempTime, hours, minutes;
+
+        tempTime = Integer.parseInt(time.toString().replace(":", ""));
+
+        hours = tempTime / 100;
+        minutes = tempTime % 100;
+
+        if(hours - 12 > 0){//if time was 14
+            finalTime = hours + ":";//stores time now as "2:"
+        } else {//if time was 12
+            finalTime = hours + ":";//stores time now as "12:"
+        }
+
+        if(minutes > 0){//if time had minutes
+            finalTime += minutes;//stores time now as "2:30"
+        } else {//if time had no minutes
+            finalTime += "00";//stores time now as "2:00"
+        }
+
+        return finalTime;
+    }//end of convert to StandardTime 
+
     //returns either the first or second time of a player availability as an integer
     public static int getAvailTime(String avail, boolean firstTime){
         String timeString;//temporary hold for segmented time 
@@ -116,7 +139,7 @@ public class utility {
         return time;
     }//end of get available time
 
-    public static boolean matchValidity(int day, String name1, int p1a1, int p1a2, String name2, int p2a1, int p2a2){
+    public static boolean matchValidity(LocalDate matchDay, int day, String name1, int p1a1, int p1a2, String name2, int p2a1, int p2a2){
 
         //seperating the military time conversion into hours and minutes for easier comparision 
         LocalTime player1Start = LocalTime.of(p1a1 / 100, p1a1 % 100);
@@ -137,17 +160,12 @@ public class utility {
         if(availStart.plus(matchDuration).isBefore(availEnd)){
             LocalTime matchStart = availStart;//will be used for match scheudling 
 
-            /////
-            //temp date print until match has been placed correctly
-            /////
-            LocalDate startDay = LocalDate.of(2022, 1, 3);
-
             //creating match object and filling in its match information
             matchObject match = new matchObject(name1, name2);
             match.setTime(matchStart);
-            match.setMatchDay(startDay);
+            match.setMatchDay(matchDay);
 
-            tourneyManager.schedule.get(startDay).addMatch(match);//adding the match into the generated schedule
+            tourneyManager.schedule.get(matchDay).addMatch(match);//adding the match into the generated schedule
 
             //figuring out when the mach will be over for other matches to be held
             LocalTime matchEnd = matchStart.plus(matchDuration).plus(gracePeriod);
@@ -160,17 +178,10 @@ public class utility {
             pdfManager.players.get(name2).setAvail(day, newStart + "-" + p2a2);
 
 
-            ///////future issue of changing the availability and have to change back to begining matches
             return true;
         }
         return false;
 
     }//end of match validity
-
-    //used to reset players availability if their times are no longer able to generate more matches
-    public static void invalidAvail(){
-
-
-    }//end of invalid availability 
 
 }//end of utility

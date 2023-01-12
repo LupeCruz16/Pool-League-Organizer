@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class tourneySchduleObject {
@@ -39,8 +40,10 @@ public class tourneySchduleObject {
             System.out.println("On: " + scheduledDay.toString());//printing the day of the matches
 
             for(int i = 0; i < todaysMatches; i++){//itterate through all generated matches
-                System.out.println(dayMatches.get(i).getPlayer1() + " will play againt" + dayMatches.get(i).getPlayer2() + 
-                " at " + dayMatches.get(i).getTime());
+                String matchTime = utility.convertToStandardTime(dayMatches.get(i).getTime());
+
+                System.out.println(dayMatches.get(i).getPlayer1() + " will play againt " + dayMatches.get(i).getPlayer2() + 
+                " at " + matchTime);
             }
 
         } else {

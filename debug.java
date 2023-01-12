@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 
 public class debug {
     public static void displayPlayer(String name){
@@ -19,5 +20,13 @@ public class debug {
 
         System.out.println("Match Counter: " + player.getMatchCounter() + "\n");
 
+    }
+
+    public static void dislpayWeeklyMatches(){
+        LocalDate[] dates = tourneyManager.schedule.keySet().toArray(new LocalDate[tourneyManager.schedule.size()]);
+
+        for(int i = 0; i < tourneyManager.schedule.size(); i++){
+            tourneyManager.schedule.get(dates[i]).displayMatches();
+        }
     }
 }

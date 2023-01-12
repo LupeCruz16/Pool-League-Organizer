@@ -1,7 +1,7 @@
 
 public class playerObject {
     public final static int DAYS = 5;//setting max availability array size to 5 for the five days of the week
-    public final static int MAX_MATCHES = 15;
+    public final static int MAX_MATCHES = enteredInfo.MAX_MATCHES;
     private String[] avail = new String[DAYS];//availability array for all days of the week, can be changed for match generation
     private String[] finalAvail = new String[DAYS];//contains availability but these times are not to be changed
 

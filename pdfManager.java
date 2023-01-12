@@ -43,9 +43,7 @@ public class pdfManager {
 
                 tourneyManager.matchGeneration();//generate matches for all players
 
-                //match generated here
-                LocalDate startDay = LocalDate.of(2022, 1, 3);
-                tourneyManager.schedule.get(startDay).displayMatches();
+                debug.dislpayWeeklyMatches();
 
                 pdfDocument.close();//closing document
                 fis.close();//closing file input stream
@@ -113,9 +111,9 @@ public class pdfManager {
     //will generate all possible days that matches can be held 
     public static void matchDayGen(){//add after LocalDate startDay, LocalDate endDay
 
-        /////////temporary holds for match generation testing 
-        LocalDate startDay = LocalDate.of(2022, 1, 1);
-        LocalDate endDay = LocalDate.of(2022, 1, 31);
+        //generating matches for the given length of the tournament 
+        LocalDate startDay = enteredInfo.STAR_DATE;
+        LocalDate endDay = enteredInfo.END_DATE;
 
         while(!startDay.isAfter(endDay)){//while not at the final day of the tournament
 
