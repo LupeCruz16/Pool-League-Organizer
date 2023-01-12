@@ -17,20 +17,22 @@ public class playerPanel extends JPanel implements ActionListener{
         //creating buttons 
         back = new JButton("<-");
         back.addActionListener(this);
-        back.setForeground(colorPalette.poolBlue);
+        back.setForeground(Color.white);
+        back.setBackground(colorPalette.poolBlue);
 
         upload = new JButton("Upload PDF of Players");
         upload.addActionListener(this);
-        upload.setForeground(colorPalette.poolBlue);
+        upload.setForeground(Color.white);
+        upload.setBackground(colorPalette.poolBlue);
 
         //creating labels
         tourneyDay = new JLabel("What day will the tournament begin: ");
-        tourneyDay.setFont(new Font("Arial", Font.PLAIN, 15));
-        tourneyDay.setForeground(colorPalette.poolBlue);
+        tourneyDay.setFont(new Font("Arial", Font.BOLD, 15));
+        tourneyDay.setForeground(Color.white);
 
         tourneyWeeks = new JLabel("How many weeks will the tournament last: ");
-        tourneyWeeks.setFont(new Font("Arial", Font.PLAIN, 15));
-        tourneyWeeks.setForeground(colorPalette.poolBlue);
+        tourneyWeeks.setFont(new Font("Arial", Font.BOLD, 15));
+        tourneyWeeks.setForeground(Color.white);
 
         //creating text areas 
         daysField = new JTextArea();
@@ -39,12 +41,15 @@ public class playerPanel extends JPanel implements ActionListener{
         weeksField = new JTextArea();
         weeksField.setPreferredSize(new Dimension(100, 20));
 
+        day.setBackground(colorPalette.defaultGrey);
         day.add(tourneyDay);
         day.add(daysField);
 
+        week.setBackground(colorPalette.defaultGrey);
         week.add(tourneyWeeks);
         week.add(weeksField);
 
+        main.setBackground(colorPalette.defaultGrey);
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.add(upload);
 
