@@ -91,25 +91,16 @@ public class utility {
 
     //takes in given local time that is in a format of "14:30" and returns "2:30"
     public static String convertToStandardTime(LocalTime time){
-        String finalTime;
-        int tempTime, hours, minutes;
+        String finalTime;//final time to be returned
+        String[] parts = time.toString().split(":");//splitting time based on colons position
 
-        tempTime = Integer.parseInt(time.toString().replace(":", ""));
+        int hours = Integer.parseInt(parts[0]);//obtaining hours as an integer
 
-        hours = tempTime / 100;
-        minutes = tempTime % 100;
+        if(hours > 12){//if time is 14 then convert to 2
+            hours -= 12;
+        } 
 
-        if(hours - 12 > 0){//if time was 14
-            finalTime = hours + ":";//stores time now as "2:"
-        } else {//if time was 12
-            finalTime = hours + ":";//stores time now as "12:"
-        }
-
-        if(minutes > 0){//if time had minutes
-            finalTime += minutes;//stores time now as "2:30"
-        } else {//if time had no minutes
-            finalTime += "00";//stores time now as "2:00"
-        }
+        finalTime = Integer.toString(hours) + ":" + parts[1];//combine parts to create final time 
 
         return finalTime;
     }//end of convert to StandardTime 
