@@ -24,9 +24,13 @@ public class controller extends JPanel{
         weeklyPanel = new weeklyPanel();
         
         cards.add(mainPanel, "Homescreen");
+        mainPanel.setBackground(colorPalette.defaultGrey);
         cards.add(playerPanel, "Upload Player Info");
+        playerPanel.setBackground(colorPalette.defaultGrey);
         cards.add(tourneyPanel, "View Bracket");
+        tourneyPanel.setBackground(colorPalette.defaultGrey);
         cards.add(weeklyPanel, "Weekly Matches");
+        weeklyPanel.setBackground(colorPalette.defaultGrey);
 ;
         add(cards);
         setVisible(true);

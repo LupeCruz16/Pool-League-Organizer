@@ -6,7 +6,7 @@ import javax.swing.*;
 public class homePanel extends JPanel implements ActionListener{
     
     private JButton playerInfo, bracket, weekly, exit;
-    private JLabel appName, blank, option, tab, tab2;
+    private JLabel appName, blank, option, tab, tab2, tab3;
 
     public homePanel(){
 
@@ -22,23 +22,31 @@ public class homePanel extends JPanel implements ActionListener{
         //Creating buttons
         playerInfo = new JButton("Upload Players");//creating uploading photos button 
         playerInfo.addActionListener(this);//monitor if clicked 
-        playerInfo.setPreferredSize(new Dimension(150, 35));
-        playerInfo.setForeground(colorPalette.poolBlue);
+        playerInfo.setPreferredSize(new Dimension(300, 35));
+        playerInfo.setFont(new Font("Arial", Font.PLAIN, 15));
+        playerInfo.setForeground(Color.white);
+        playerInfo.setBackground(colorPalette.poolBlue);
 
         bracket = new JButton("View Tournament Bracket");
         bracket.addActionListener(this);
-        bracket.setPreferredSize(new Dimension(200, 35));
-        bracket.setForeground(colorPalette.poolBlue);
+        bracket.setPreferredSize(new Dimension(300, 35));
+        bracket.setFont(new Font("Arial", Font.PLAIN, 15));
+        bracket.setForeground(Color.white);
+        bracket.setBackground(colorPalette.poolBlue);
 
         weekly = new JButton("View Weekly Matches");
         weekly.addActionListener(this);
-        weekly.setPreferredSize(new Dimension(200, 35));
-        weekly.setForeground(colorPalette.poolBlue);
+        weekly.setPreferredSize(new Dimension(300, 35));
+        weekly.setFont(new Font("Arial", Font.PLAIN, 15));
+        weekly.setForeground(Color.white);
+        weekly.setBackground(colorPalette.poolBlue);
 
         exit = new JButton("Exit");
         exit.addActionListener(this);
-        exit.setPreferredSize(new Dimension(100, 35));
-        exit.setForeground(colorPalette.poolBlue);
+        exit.setPreferredSize(new Dimension(300, 35));
+        exit.setFont(new Font("Arial", Font.PLAIN, 15));
+        exit.setForeground(Color.white);
+        exit.setBackground(colorPalette.poolBlue);
 
         //Creating Labels
         appName = new JLabel("Welcome To The League Manager");
@@ -46,11 +54,12 @@ public class homePanel extends JPanel implements ActionListener{
         appName.setForeground(Color.white);
 
         option = new JLabel("Please choose an option");
-        option.setFont(new Font("Arial", Font.PLAIN, 15));//resizing text within label
+        option.setFont(new Font("Arial", Font.PLAIN, 25));//resizing text within label
         option.setForeground(Color.white);
 
         tab = new JLabel("    ");
         tab2 = new JLabel("    ");
+        tab3 = new JLabel("    ");
 
         blank = new JLabel("");
 
@@ -67,18 +76,25 @@ public class homePanel extends JPanel implements ActionListener{
         prompt.setPreferredSize(new Dimension(820, 30));
         prompt.setBackground(colorPalette.poolBlue);
 
+        middle.setLayout(new BoxLayout(middle, BoxLayout.Y_AXIS));
+        middle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        middle.setBackground(colorPalette.defaultGrey);
+
+        middle.setBackground(colorPalette.defaultGrey);
         middle.add(playerInfo);
         middle.add(tab);
         middle.add(bracket);
         middle.add(tab2);
         middle.add(weekly);
+        middle.add(tab3);
+        middle.add(exit);
 
+        space2.setBackground(colorPalette.defaultGrey);
         space2.add(blank);
-        button.add(exit);
+        button.setBackground(colorPalette.defaultGrey);
         
-
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-
+        
         main.add(space);
         main.add(title);
         main.add(prompt);
