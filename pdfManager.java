@@ -1,12 +1,12 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -39,7 +39,13 @@ public class pdfManager {
 
                 militaryConv();//converts all stored players availability into military time
                 matchPairGen();//generates a unique list of pair players 
-                matchGeneration();//generate matches for all players
+                matchDayGen();//generates an array list of playable days in the tournament, excluding weekends
+
+                tourneyManager.matchGeneration();//generate matches for all players
+
+                //match generated here
+                LocalDate startDay = LocalDate.of(2022, 1, 3);
+                tourneyManager.schedule.get(startDay).displayMatches();
 
                 pdfDocument.close();//closing document
                 fis.close();//closing file input stream
@@ -98,64 +104,36 @@ public class pdfManager {
 
         for(int i = 0; i < players.size(); i++){//itterates through the entire player HashMap
             for(int j = i + 1; j < players.size(); j++){//goes through the following player after i 
-                matches.add(new matchObject(names[i], names[j], 0, 0));//adding the pair into the match object
+                matches.add(new matchObject(names[i], names[j]));//adding the pair into the match object
             }
         }
 
     }//end of military conversion
 
-    //will find possible matches and add them into the Challonge API as found
-    private static void matchGeneration(){
-        boolean matchFound;//boolean used to break out of for loop when match was found
+    //will generate all possible days that matches can be held 
+    public static void matchDayGen(){//add after LocalDate startDay, LocalDate endDay
 
-        for(int i = 0; i < matches.size(); i++){//itterates through unique array list of matches
-            matchObject match = matches.get(i);//obtaining a single match that contains two player names
-            
-            matchFound = false;//initialize to false
-            for(int j = 0; !matchFound && j < playerObject.DAYS; j++){//itterates through all of the players availability
+        /////////temporary holds for match generation testing 
+        LocalDate startDay = LocalDate.of(2022, 1, 1);
+        LocalDate endDay = LocalDate.of(2022, 1, 31);
 
-                //p1a1 stands for player 1 time availability 1 or start time
-                int p1a1 = utility.getAvailTime(players.get(match.getPlayer1()).getAvail(j), true);
-                int p1a2 = utility.getAvailTime(players.get(match.getPlayer1()).getAvail(j), false);
+        while(!startDay.isAfter(endDay)){//while not at the final day of the tournament
 
-                int p2a1 = utility.getAvailTime(players.get(match.getPlayer2()).getAvail(j), true);
-                int p2a2 = utility.getAvailTime(players.get(match.getPlayer2()).getAvail(j), false);
+            //if one of the days from the start day is not on the weekend add to match days array list
+            if(startDay.getDayOfWeek() != DayOfWeek.SATURDAY && 
+               startDay.getDayOfWeek() != DayOfWeek.SUNDAY){
 
-                if(p1a1 > 0 && p2a1 > 0){//if either player is available that day try to generate a match
+                //adding the days available for scheduling into the tournament manager schedule with an empty tourneyScheduleObject
+                tourneyManager.schedule.put(startDay, new tourneySchduleObject(startDay, new matchObject()));
 
-                    //checking to ensure that another match can be added to each players match counter
-                    if(players.get(match.getPlayer1()).getMatchCounter() < playerObject.MAX_MATCHES &&
-                       players.get(match.getPlayer2()).getMatchCounter() < playerObject.MAX_MATCHES){
+                startDay = startDay.plusDays(1);//itterates through to next day
 
-                        //if a match was generated between the players move to next player
-                        if(utility.matchValidity(j, match.getPlayer1(), p1a1, p1a2, match.getPlayer2(), p2a1, p2a2)){
+            } else {//if it is a weekend then itterate to next day 
+                startDay = startDay.plusDays(1);
 
-                            //System.out.println(players.get(match.getPlayer1()).getName() + players.get(match.getPlayer1()).getAvail(j));
-
-                            //updating the amount of matches that each player has scheduled
-                            players.get(match.getPlayer1()).incrementMatchCounter();
-                            players.get(match.getPlayer2()).incrementMatchCounter();
-                            matchFound = true;//set boolean to true as match was generated
-
-                        }
-                    }
-                }
             }
         }
 
-    }//end of match generation
-
-    //resets players availabilities
-    private static void resetAvail(){
-        Collection<playerObject> values = players.values();//obtains all players stored within the HashMap of players
-        
-        for(playerObject player : values){//itterates through each player
-          
-            for(int i = 0; i < playerObject.DAYS; i++){//itterates through all days of the players availability
-                player.setAvail(i, player.getFinalAvail(i));//resetting to original military converted time
-            }
-
-        }
-    }//end of reset availability
+    }//end of match days generation
 
 }//end of pdfManager

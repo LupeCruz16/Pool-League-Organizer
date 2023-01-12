@@ -1,5 +1,6 @@
 import javax.swing.JOptionPane;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class utility {
@@ -136,8 +137,17 @@ public class utility {
         if(availStart.plus(matchDuration).isBefore(availEnd)){
             LocalTime matchStart = availStart;//will be used for match scheudling 
 
-            //temp string print until match has been placed
-            System.out.println("A match can be scheduled at " + matchStart + " on " + day + " between " + name1 + " and " + name2);
+            /////
+            //temp date print until match has been placed correctly
+            /////
+            LocalDate startDay = LocalDate.of(2022, 1, 3);
+
+            //creating match object and filling in its match information
+            matchObject match = new matchObject(name1, name2);
+            match.setTime(matchStart);
+            match.setMatchDay(startDay);
+
+            tourneyManager.schedule.get(startDay).addMatch(match);//adding the match into the generated schedule
 
             //figuring out when the mach will be over for other matches to be held
             LocalTime matchEnd = matchStart.plus(matchDuration).plus(gracePeriod);
@@ -157,5 +167,10 @@ public class utility {
 
     }//end of match validity
 
+    //used to reset players availability if their times are no longer able to generate more matches
+    public static void invalidAvail(){
+
+
+    }//end of invalid availability 
 
 }//end of utility

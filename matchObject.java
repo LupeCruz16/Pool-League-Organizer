@@ -1,17 +1,36 @@
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class matchObject {
 
      private String player1, player2;
-     private int time, day;
+     private int table;
+     private LocalDate matchDay;
+     private LocalTime matchTime;
 
      //Constructor
-     public matchObject(String player1, String player2, int time, int day){
+     public matchObject(String player1, String player2){
 
         this.player1 = player1;
         this.player2 = player2;
-        this.time = time;
-        this.day = day;
+        this.table = 0;
+
+        this.matchDay = LocalDate.of(2023, 1, 1);//default to January 1st of 2023
+        this.matchTime = LocalTime.of(12, 12);//defaulting time of match start at 12:12
 
      }//End of constructor
+
+     //Default constructor
+     public matchObject(){
+
+      this.player1 = "Unkown";
+      this.player2 = "Unkown";
+      this.table = 0;
+
+      this.matchDay = LocalDate.of(2023, 1, 1);//default to January 1st of 2023
+      this.matchTime = LocalTime.of(12, 12);//defaulting time of match start at 12:12
+
+   }//End of Defualt constructor
 
      //Getter and setter methods
      public String getPlayer1(){
@@ -30,34 +49,28 @@ public class matchObject {
         this.player2 = player2;
      }
 
-     public String getDay(){
-        
-         switch(day){
-            case 0:
-               return "Monday";
-            case 1:
-               return "Tuesday";
-            case 2:
-               return "Wednesday";
-            case 3:
-               return "Thursday";
-            case 4:
-               return "Friday";
-            default:
-               return "Invalid Day.";
-         }
+     public int getTable(){
+         return table;
      }
 
-     public void setDay(int day){
-        this.day = day;
+     public void setTable(int table){
+         this.table = table;
      }
 
-     public int getTime(){
-        return time;
+     public String getMatchDay(){
+         return matchDay.toString();
      }
 
-     public void setTime(int time){
-        this.time = time;
+     public void setMatchDay(LocalDate day){
+         this.matchDay = day;
+     }
+
+     public LocalTime getTime(){
+        return matchTime;
+     }
+
+     public void setTime(LocalTime time){
+        this.matchTime = time;
      }
      
 }//End of machObject class
