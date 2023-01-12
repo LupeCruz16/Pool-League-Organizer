@@ -26,6 +26,7 @@ public class homePanel extends JPanel implements ActionListener{
         playerInfo.setFont(new Font("Arial", Font.PLAIN, 15));
         playerInfo.setForeground(Color.white);
         playerInfo.setBackground(colorPalette.poolBlue);
+        playerInfo.setOpaque(true);
 
         bracket = new JButton("View Tournament Bracket");
         bracket.addActionListener(this);
@@ -33,6 +34,7 @@ public class homePanel extends JPanel implements ActionListener{
         bracket.setFont(new Font("Arial", Font.PLAIN, 15));
         bracket.setForeground(Color.white);
         bracket.setBackground(colorPalette.poolBlue);
+        bracket.setOpaque(true);
 
         weekly = new JButton("View Weekly Matches");
         weekly.addActionListener(this);
@@ -40,6 +42,7 @@ public class homePanel extends JPanel implements ActionListener{
         weekly.setFont(new Font("Arial", Font.PLAIN, 15));
         weekly.setForeground(Color.white);
         weekly.setBackground(colorPalette.poolBlue);
+        weekly.setOpaque(true);
 
         exit = new JButton("Exit");
         exit.addActionListener(this);
@@ -47,6 +50,7 @@ public class homePanel extends JPanel implements ActionListener{
         exit.setFont(new Font("Arial", Font.PLAIN, 15));
         exit.setForeground(Color.white);
         exit.setBackground(colorPalette.poolBlue);
+        exit.setOpaque(true);
 
         //Creating Labels
         appName = new JLabel("Welcome To The League Manager");
