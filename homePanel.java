@@ -22,28 +22,28 @@ public class homePanel extends JPanel implements ActionListener{
         //Creating buttons
         playerInfo = new JButton("Upload Players");//creating uploading photos button 
         playerInfo.addActionListener(this);//monitor if clicked 
-        playerInfo.setPreferredSize(new Dimension(300, 35));
+        playerInfo.setMaximumSize(new Dimension(300, 35));
         playerInfo.setFont(new Font("Arial", Font.PLAIN, 15));
         playerInfo.setForeground(Color.white);
         playerInfo.setBackground(colorPalette.poolBlue);
 
         bracket = new JButton("View Tournament Bracket");
         bracket.addActionListener(this);
-        bracket.setPreferredSize(new Dimension(300, 35));
+        bracket.setMaximumSize(new Dimension(300, 35));
         bracket.setFont(new Font("Arial", Font.PLAIN, 15));
         bracket.setForeground(Color.white);
         bracket.setBackground(colorPalette.poolBlue);
 
         weekly = new JButton("View Weekly Matches");
         weekly.addActionListener(this);
-        weekly.setPreferredSize(new Dimension(300, 35));
+        weekly.setMaximumSize(new Dimension(300, 35));
         weekly.setFont(new Font("Arial", Font.PLAIN, 15));
         weekly.setForeground(Color.white);
         weekly.setBackground(colorPalette.poolBlue);
 
         exit = new JButton("Exit");
         exit.addActionListener(this);
-        exit.setPreferredSize(new Dimension(300, 35));
+        exit.setMaximumSize(new Dimension(300, 35));
         exit.setFont(new Font("Arial", Font.PLAIN, 15));
         exit.setForeground(Color.white);
         exit.setBackground(colorPalette.poolBlue);
