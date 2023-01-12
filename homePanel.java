@@ -67,6 +67,7 @@ public class homePanel extends JPanel implements ActionListener{
         space.add(blank);
         space.setPreferredSize(new Dimension(820, 15));
         space.setBackground(colorPalette.poolBlue);
+        space.setBackground(colorPalette.defaultGrey);
 
         title.add(appName);
         title.setPreferredSize(new Dimension(820, 65));
@@ -80,7 +81,6 @@ public class homePanel extends JPanel implements ActionListener{
         middle.setAlignmentX(Component.CENTER_ALIGNMENT);
         middle.setBackground(colorPalette.defaultGrey);
 
-        middle.setBackground(colorPalette.defaultGrey);
         middle.add(playerInfo);
         middle.add(tab);
         middle.add(bracket);
@@ -94,7 +94,8 @@ public class homePanel extends JPanel implements ActionListener{
         button.setBackground(colorPalette.defaultGrey);
         
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-        
+        main.setBackground(colorPalette.defaultGrey);
+
         main.add(space);
         main.add(title);
         main.add(prompt);

@@ -1,5 +1,6 @@
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
 
 public class weeklyPanel extends JPanel implements ActionListener{
    
@@ -12,8 +13,10 @@ public class weeklyPanel extends JPanel implements ActionListener{
         //Creating Buttons
         back = new JButton("<-");
         back.addActionListener(this);
-        back.setForeground(colorPalette.poolBlue);
+        back.setForeground(Color.white);
+        back.setBackground(colorPalette.poolBlue);
 
+        main.setBackground(colorPalette.defaultGrey);
         main.add(back);
 
         add(main);
