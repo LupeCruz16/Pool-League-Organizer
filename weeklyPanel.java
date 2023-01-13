@@ -15,6 +15,7 @@ public class weeklyPanel extends JPanel implements ActionListener{
         back.addActionListener(this);
         back.setForeground(Color.white);
         back.setBackground(colorPalette.poolBlue);
+        back.setOpaque(true);
 
         main.setBackground(colorPalette.defaultGrey);
         main.add(back);

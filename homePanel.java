@@ -20,7 +20,7 @@ public class homePanel extends JPanel implements ActionListener{
         JPanel button = new JPanel();
 
         //Creating buttons
-        playerInfo = new JButton("Upload Players");//creating uploading photos button 
+        playerInfo = new JButton("Create a Tournament");//creating uploading photos button 
         playerInfo.addActionListener(this);//monitor if clicked 
         playerInfo.setMaximumSize(new Dimension(300, 35));
         playerInfo.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -69,7 +69,7 @@ public class homePanel extends JPanel implements ActionListener{
 
         //Adding elements to panels 
         space.add(blank);
-        space.setPreferredSize(new Dimension(820, 15));
+        space.setPreferredSize(new Dimension(820, 35));
         space.setBackground(colorPalette.poolBlue);
         space.setBackground(colorPalette.defaultGrey);
 
@@ -78,19 +78,20 @@ public class homePanel extends JPanel implements ActionListener{
         title.setBackground(colorPalette.poolBlue);
 
         prompt.add(option);
-        prompt.setPreferredSize(new Dimension(820, 30));
+        prompt.setPreferredSize(new Dimension(820, 45));
         prompt.setBackground(colorPalette.poolBlue);
 
         middle.setLayout(new BoxLayout(middle, BoxLayout.Y_AXIS));
         middle.setAlignmentX(Component.CENTER_ALIGNMENT);
         middle.setBackground(colorPalette.defaultGrey);
 
+        middle.add(Box.createRigidArea(new Dimension(20, 20)));
         middle.add(playerInfo);
-        middle.add(tab);
+        middle.add(Box.createRigidArea(new Dimension(20, 20)));
         middle.add(bracket);
-        middle.add(tab2);
+        middle.add(Box.createRigidArea(new Dimension(20, 20)));
         middle.add(weekly);
-        middle.add(tab3);
+        middle.add(Box.createRigidArea(new Dimension(20, 20)));
         middle.add(exit);
 
         space2.setBackground(colorPalette.defaultGrey);

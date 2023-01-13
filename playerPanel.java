@@ -19,11 +19,13 @@ public class playerPanel extends JPanel implements ActionListener{
         back.addActionListener(this);
         back.setForeground(Color.white);
         back.setBackground(colorPalette.poolBlue);
+        back.setOpaque(true);
 
         upload = new JButton("Upload PDF of Players");
         upload.addActionListener(this);
         upload.setForeground(Color.white);
         upload.setBackground(colorPalette.poolBlue);
+        upload.setOpaque(true);
 
         //creating labels
         tourneyDay = new JLabel("What day will the tournament begin: ");
