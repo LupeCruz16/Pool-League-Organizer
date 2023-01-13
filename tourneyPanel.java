@@ -1,6 +1,5 @@
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.*;
 
 public class tourneyPanel extends JPanel implements ActionListener{
 
@@ -13,9 +12,7 @@ public class tourneyPanel extends JPanel implements ActionListener{
         //Creating Buttons
         back = new JButton("<-");
         back.addActionListener(this);
-        back.setForeground(Color.white);
-        back.setBackground(colorPalette.poolBlue);
-        back.setOpaque(true);
+        uiDesign.formatButton(back);
 
         main.setBackground(colorPalette.defaultGrey);
         main.add(back);

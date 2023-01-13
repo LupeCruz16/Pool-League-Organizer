@@ -17,15 +17,11 @@ public class playerPanel extends JPanel implements ActionListener{
         //creating buttons 
         back = new JButton("<-");
         back.addActionListener(this);
-        back.setForeground(Color.white);
-        back.setBackground(colorPalette.poolBlue);
-        back.setOpaque(true);
+        uiDesign.formatButton(back);
 
         upload = new JButton("Upload PDF of Players");
         upload.addActionListener(this);
-        upload.setForeground(Color.white);
-        upload.setBackground(colorPalette.poolBlue);
-        upload.setOpaque(true);
+        uiDesign.formatButton(upload);
 
         //creating labels
         tourneyDay = new JLabel("What day will the tournament begin: ");
@@ -51,14 +47,20 @@ public class playerPanel extends JPanel implements ActionListener{
         week.add(tourneyWeeks);
         week.add(weeksField);
 
-        main.setBackground(colorPalette.defaultGrey);
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+        
+        main.setBackground(colorPalette.defaultGrey);
+
+        uiDesign.spacer(main);
         main.add(upload);
+        upload.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         main.add(day);
         main.add(week);
 
         main.add(back);
+        back.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
         add(main);
     }
 

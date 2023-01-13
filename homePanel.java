@@ -22,35 +22,19 @@ public class homePanel extends JPanel implements ActionListener{
         //Creating buttons
         playerInfo = new JButton("Create a Tournament");//creating uploading photos button 
         playerInfo.addActionListener(this);//monitor if clicked 
-        playerInfo.setMaximumSize(new Dimension(300, 35));
-        playerInfo.setFont(new Font("Arial", Font.PLAIN, 15));
-        playerInfo.setForeground(Color.white);
-        playerInfo.setBackground(colorPalette.poolBlue);
-        playerInfo.setOpaque(true);
+        uiDesign.formatButton(playerInfo);
 
         bracket = new JButton("View Tournament Bracket");
         bracket.addActionListener(this);
-        bracket.setMaximumSize(new Dimension(300, 35));
-        bracket.setFont(new Font("Arial", Font.PLAIN, 15));
-        bracket.setForeground(Color.white);
-        bracket.setBackground(colorPalette.poolBlue);
-        bracket.setOpaque(true);
+        uiDesign.formatButton(bracket);
 
         weekly = new JButton("View Weekly Matches");
         weekly.addActionListener(this);
-        weekly.setMaximumSize(new Dimension(300, 35));
-        weekly.setFont(new Font("Arial", Font.PLAIN, 15));
-        weekly.setForeground(Color.white);
-        weekly.setBackground(colorPalette.poolBlue);
-        weekly.setOpaque(true);
+        uiDesign.formatButton(weekly);
 
         exit = new JButton("Exit");
         exit.addActionListener(this);
-        exit.setMaximumSize(new Dimension(300, 35));
-        exit.setFont(new Font("Arial", Font.PLAIN, 15));
-        exit.setForeground(Color.white);
-        exit.setBackground(colorPalette.poolBlue);
-        exit.setOpaque(true);
+        uiDesign.formatButton(exit);
 
         //Creating Labels
         appName = new JLabel("Welcome To The League Manager");
@@ -81,26 +65,25 @@ public class homePanel extends JPanel implements ActionListener{
         middle.setAlignmentX(Component.CENTER_ALIGNMENT);
         middle.setBackground(colorPalette.defaultGrey);
 
-        middle.add(Box.createRigidArea(new Dimension(20, 20)));
+        uiDesign.spacer(middle);
         middle.add(playerInfo);
-        middle.add(Box.createRigidArea(new Dimension(20, 20)));
+        uiDesign.spacer(middle);
         middle.add(bracket);
-        middle.add(Box.createRigidArea(new Dimension(20, 20)));
+        uiDesign.spacer(middle);
         middle.add(weekly);
-        middle.add(Box.createRigidArea(new Dimension(20, 20)));
+        uiDesign.spacer(middle);
         middle.add(exit);
 
         space2.setBackground(colorPalette.defaultGrey);
-        space2.add(blank);
+        uiDesign.spacer(space2);
         button.setBackground(colorPalette.defaultGrey);
         
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.setBackground(colorPalette.defaultGrey);
 
-        main.add(space);
+        uiDesign.spacer(main);
         main.add(title);
         main.add(prompt);
-        main.add(space2);
         main.add(middle);
         main.add(button);
 
