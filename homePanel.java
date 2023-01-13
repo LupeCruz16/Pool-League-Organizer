@@ -6,7 +6,7 @@ import javax.swing.*;
 public class homePanel extends JPanel implements ActionListener{
     
     private JButton playerInfo, bracket, weekly, exit;
-    private JLabel appName, blank, option, tab, tab2, tab3;
+    private JLabel appName, blank, option;
 
     public homePanel(){
 
@@ -60,10 +60,6 @@ public class homePanel extends JPanel implements ActionListener{
         option = new JLabel("Please choose an option");
         option.setFont(new Font("Arial", Font.PLAIN, 25));//resizing text within label
         option.setForeground(Color.white);
-
-        tab = new JLabel("    ");
-        tab2 = new JLabel("    ");
-        tab3 = new JLabel("    ");
 
         blank = new JLabel("");
 
