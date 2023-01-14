@@ -3,7 +3,8 @@ import java.io.FileInputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -37,13 +38,12 @@ public class pdfManager {
 
                 extractInfo(docText);//extracts and stores all player information into their objects
 
-                militaryConv();//converts all stored players availability into military time
                 matchPairGen();//generates a unique list of pair players 
                 matchDayGen();//generates an array list of playable days in the tournament, excluding weekends
 
                 tourneyManager.matchGeneration();//generate matches for all players
 
-                debug.dislpayWeeklyMatches();
+                //debug.dislpayWeeklyMatches();
 
                 pdfDocument.close();//closing document
                 fis.close();//closing file input stream
@@ -57,8 +57,9 @@ public class pdfManager {
     //obtains each players information from a pdf of the pool league roster
     private static void extractInfo(String doc){
 
-        String [] lines = doc.split("\n");//obtains every new lines in the document text
-        String name, email, mon, tues, wed, thur, fri;//strings for collecting information from each player
+        String[] lines = doc.split("\n");//obtains every new lines in the document text
+        String name, email;//strings for collecting information from each player
+        String[] avail = new String[playerObject.DAYS];
 
         for(String line : lines){//itterates through every line in document 
 
@@ -67,54 +68,42 @@ public class pdfManager {
             //sections everything out
             name = parts[0];
             email = parts[1].substring(1);
-            mon = parts[2].substring(1);
-            tues = parts[3].substring(1);
-            wed = parts[4].substring(1);
-            thur = parts[5].substring(1);
-            fri = parts[6].substring(1);
+            for(int i = 0; i < parts.length - 2; i++){
+                avail[i] = parts[i + 2].substring(1);
+            }
 
             //adding all information to players HashMap
-            players.put(name, new playerObject(name, email, mon, tues, wed, thur, fri));
+            players.put(name, new playerObject(name, email, avail));
             
         }
 
     }//end of extract info
 
-    //converts all players availaility into military time
-    private static void militaryConv(){
-        Collection<playerObject> values = players.values();//obtains all players stored within the HashMap of players
-        
-        for(playerObject player : values){//itterates through each player
-            //changes the collected time into military time
-            utility.modifyTime(player, 0);
-            utility.modifyTime(player, 1);
-            utility.modifyTime(player, 2);
-            utility.modifyTime(player, 3);
-            utility.modifyTime(player, 4);
-
-        }
-    }//end of military conversion
-
     //generates a unique array list of match objects that stores players in pairs to verify if a match can be made
     private static void matchPairGen(){
         
-        String[] names = players.keySet().toArray(new String[players.size()]);//creates an array of strings with players names
+        ArrayList<String> names = new ArrayList<>(players.keySet());//creating an array list of players names from the hash map
 
+        for(int i = 0; i < names.size(); i++){
+            debug.displayPlayer(names.get(i));
+        }
+        
+        //sorting the list based on their availability score
+        Collections.sort(names, new Comparator<String>(){
+            public int compare(String name1, String name2){
+                return players.get(name1).getAvailScore().compareTo(players.get(name2).getAvailScore());
+
+            }
+        });
+
+        //generating the players matches based on thier scores 
         for(int i = 0; i < players.size(); i++){//itterates through the entire player HashMap
             for(int j = i + 1; j < players.size(); j++){//goes through the following player after i 
-                matches.add(new matchObject(names[i], names[j]));//adding the pair into the match object
+                matches.add(new matchObject(names.get(i), names.get(j)));//adding the pair into the match object
             }
         }
 
-    }//end of military conversion
-
-    //deletes a match from matches array list to show that a match has been made from the unique list of pairings
-    public static void matchDeletion(String player1, String player2){
-
-        //if both names are found within the array list of matches then remove the match
-        matches.removeIf(match -> (match.getPlayer1().equals(player1) && match.getPlayer2().equals(player2)) ||
-        (match.getPlayer1().equals(player2) && match.getPlayer1().equals(player1)));
-    }//end of match deletion
+    }//end of match pair generation
 
     //will generate all possible days that matches can be held 
     public static void matchDayGen(){//add after LocalDate startDay, LocalDate endDay
@@ -141,5 +130,13 @@ public class pdfManager {
         }
 
     }//end of match days generation
+
+    //deletes a match from matches array list to show that a match has been made from the unique list of pairings
+    public static void matchDeletion(String player1, String player2){
+
+        //if both names are found within the array list of matches then remove the match
+        matches.removeIf(match -> (match.getPlayer1().equals(player1) && match.getPlayer2().equals(player2)) ||
+        (match.getPlayer1().equals(player2) && match.getPlayer1().equals(player1)));
+    }//end of match deletion
 
 }//end of pdfManager

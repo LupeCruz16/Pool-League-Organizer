@@ -10,13 +10,11 @@ public class debug {
 
         System.out.println("Avail: ");
         for(int i = 0; i < playerObject.DAYS; i++){
-            System.out.println(player.getAvail(i) + " ");
+            System.out.println(player.getStartAvail(i) + "-" + player.getEndAvail(i) + " ");
         }
 
-        System.out.println("Final Avail: ");
-        for(int i = 0; i < playerObject.DAYS; i++){
-            System.out.println(player.getFinalAvail(i) + " ");
-        }
+        long score = player.getAvailScore().toMinutes();
+        System.out.println("Avail score: " + score);
 
         System.out.println("Match Counter: " + player.getMatchCounter() + "\n");
 

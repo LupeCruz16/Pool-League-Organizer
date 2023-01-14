@@ -1,36 +1,56 @@
+import java.time.Duration;
+import java.time.LocalTime;
 
 public class playerObject {
     public final static int DAYS = 5;//setting max availability array size to 5 for the five days of the week
     public final static int MAX_MATCHES = enteredInfo.MAX_MATCHES;
-    private String[] avail = new String[DAYS];//availability array for all days of the week, can be changed for match generation
-    private String[] finalAvail = new String[DAYS];//contains availability but these times are not to be changed
+
+    //contain the start and end times of the players availaility from their indexes
+    private LocalTime[] start = new LocalTime[DAYS];
+    private LocalTime[] end = new LocalTime[DAYS];
+
+    //used to keep track of possible matches based on a day which would be rows
+    private static int possibleMatches = 0;
+    private static LocalTime[][] generatedMatches = new LocalTime[DAYS][possibleMatches];
 
     //variables for basic fields
     private String name, email;
-    private int wins, losses, matchCounter, weeklyMatchCount;
+    private Duration availScore;//will determine in what order they are paired up based on how available they are
+    private int  matchCounter, weeklyMatchCount;//keeps track of current number of matches scheudled and how many are allowed per week
+    private int wins, losses;//keeps track of players wins and losses
 
     //constructor
-    public playerObject(String name, String email, String mon, String tues, String wed, String thur, String fri){
+    public playerObject(String name, String email, String[] avail){
         this.name = name;
         this.email = email;
- 
-        //setting availability to gathered times of each day of the week
-        avail[0] = mon;
-        avail[1] = tues;
-        avail[2] = wed;
-        avail[3] = thur;
-        avail[4] = fri;
 
-        //initializing final availability to 0s 
-        for(int i = 0; i < DAYS; i++){
-            finalAvail[i] = "0";
+        this.availScore = Duration.ofMinutes(0);
+
+        //collecting all of the players availability 
+        for(int i = 0; i < avail.length; i++){
+
+            String tempTime = avail[i];
+            //obtaining the availability scores and storing them into two different arrays 
+            this.start[i] = utility.collectAvail(tempTime, true);
+            this.end[i] = utility.collectAvail(tempTime, false);
+
+            //generatedMatches[i][possibleMatches] = LocalTime.MIN;//initializing every slot within generated matches to have 0
+
+            ///////issue to be fixed/////
+            this.availScore = this.availScore.plusMinutes(Duration.between(start[i], end[i]).toMinutes());//obtaining the availability score as it is being collected
+
         }
-        
+
         matchCounter = 0;
         weeklyMatchCount = 0;
+
         wins = 0;
         losses = 0;
+
     }//end of constructor
+    
+    //generate all matches and then check player avail. if goes over then skip
+    //list of days for matches and if match is scheduled the same day then add 30 mintues and ensure is still valid 
 
     //getter and setter methods 
     public String getName(){
@@ -49,24 +69,36 @@ public class playerObject {
         this.email = email;
     }
 
-    public String getAvail(int day){
-        return avail[day];
+    public LocalTime getStartAvail(int day){
+        return start[day];
     }
 
-    public void setAvail(int day, String time){
-        this.avail[day] = time;
+    public LocalTime getEndAvail(int day){
+        return end[day];
     }
 
-    public String getFinalAvail(int day){
-        return finalAvail[day];
+    public LocalTime getGeneratedMatch(int day, int matchPos){
+        return generatedMatches[day][matchPos];
     }
 
-    public void setFinalAvail(int day, String time){
-        this.finalAvail[day] = time;
+    public void addGeneratedMatch(int day, LocalTime time){
+        generatedMatches[day][possibleMatches++] = time;
     }
 
-    public int get(){
-        return wins;
+    public void deleteGeneratedMatch(int day, LocalTime time){
+
+        for(int i = 0; i < DAYS; i++){
+            for(int j = 0; j < possibleMatches; j++){
+                if(generatedMatches[i][j].equals(time)){
+
+                    generatedMatches[i][j] = null;
+                }
+            }
+        }
+    }
+
+    public Duration getAvailScore(){
+        return availScore;
     }
 
     public void setMatchCounter(int matches){
@@ -91,6 +123,10 @@ public class playerObject {
 
     public int getWeeklyMatchCoun(){
         return weeklyMatchCount;
+    }
+
+    public int getWins(){
+        return wins;
     }
 
     public void setWins(int wins){

@@ -7,6 +7,9 @@ public class enteredInfo {
 
     static final LocalDate END_DATE = LocalDate.of(2023, 1, 31);
 
+    //obtaining the amount of weeks in the tournament
+    static final long TOURNEY_WEEKS = ChronoUnit.WEEKS.between(STAR_DATE, END_DATE);
+
     //include pool table and tie to match object
 
     static final int MAX_MATCHES = 15;
@@ -21,9 +24,8 @@ public class enteredInfo {
             return scheduleSize;
 
         } else {//tournement has dates within it
-            long tournamentWeeks = ChronoUnit.WEEKS.between(STAR_DATE, END_DATE);//obtaining the amount of weeks in the tournament
             
-            int weeklyMatches = MAX_MATCHES /  (int)tournamentWeeks;//finding how many matches they should have per week
+            int weeklyMatches = MAX_MATCHES /  (int)TOURNEY_WEEKS;//finding how many matches they should have per week
             return weeklyMatches;//return that number
 
         }
