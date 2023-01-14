@@ -15,6 +15,7 @@ public class uiDesign extends JPanel{
         button.setForeground(Color.white);
         button.setBackground(colorPalette.poolBlue);
         button.setOpaque(true);
+        button.setBorderPainted(false);
     }
 
     public static void spacer(JPanel panel, int x, int y){
