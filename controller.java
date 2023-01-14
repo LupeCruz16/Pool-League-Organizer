@@ -17,7 +17,7 @@ public class controller extends JPanel{
         setSize(500, 500);
 
         cards = new JPanel(new CardLayout());
-
+        
         mainPanel = new homePanel();
         playerPanel = new playerPanel();
         tourneyPanel = new tourneyPanel();
@@ -40,10 +40,13 @@ public class controller extends JPanel{
     private static void createAndDisplay(){
         JFrame frame = new JFrame("Pool League Helper");
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        
         instance = new controller();
 
         frame.getContentPane().add(instance);
-        frame.setSize(800, 800);
+        frame.setSize(1000, 800);
         frame.setVisible(true);
     }//end of create and display 
 
@@ -58,6 +61,10 @@ public class controller extends JPanel{
 
     public static controller getInstance(){
         return instance;
+    }
+
+    public homePanel getHomePanel() {
+        return mainPanel;
     }
 
 }//end of controller class

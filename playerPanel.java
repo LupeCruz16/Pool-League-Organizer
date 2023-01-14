@@ -15,7 +15,7 @@ public class playerPanel extends JPanel implements ActionListener{
         JPanel week = new JPanel();
 
         //creating buttons 
-        back = new JButton("<-");
+        back = new JButton("Back");
         back.addActionListener(this);
         uiDesign.formatButton(back);
 
@@ -25,20 +25,25 @@ public class playerPanel extends JPanel implements ActionListener{
 
         //creating labels
         tourneyDay = new JLabel("What day will the tournament begin: ");
-        tourneyDay.setFont(new Font("Arial", Font.BOLD, 15));
+        tourneyDay.setFont(new Font("Arial", Font.PLAIN, 15));
         tourneyDay.setForeground(Color.white);
 
         tourneyWeeks = new JLabel("How many weeks will the tournament last: ");
-        tourneyWeeks.setFont(new Font("Arial", Font.BOLD, 15));
+        tourneyWeeks.setFont(new Font("Arial", Font.PLAIN, 15));
         tourneyWeeks.setForeground(Color.white);
 
         //creating text areas 
         daysField = new JTextArea();
+        daysField.setBackground(Color.GRAY);
         daysField.setPreferredSize(new Dimension(100, 20));
 
         weeksField = new JTextArea();
+        weeksField.setBackground(Color.GRAY);
         weeksField.setPreferredSize(new Dimension(100, 20));
 
+
+        //adding to the panel
+        setBackground(colorPalette.defaultGrey);
         day.setBackground(colorPalette.defaultGrey);
         day.add(tourneyDay);
         day.add(daysField);
@@ -51,7 +56,7 @@ public class playerPanel extends JPanel implements ActionListener{
         
         main.setBackground(colorPalette.defaultGrey);
 
-        uiDesign.spacer(main);
+        uiDesign.spacer(main,20,20);
         main.add(upload);
         upload.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -65,13 +70,17 @@ public class playerPanel extends JPanel implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent e){
+
+        homePanel home = controller.getInstance().getHomePanel();
+        JPanel mainPanel = home.getMainPanel();
+
         if(e.getSource() == upload){
             pdfManager.readInFiles();
             
         }
         else if(e.getSource() == back){
-            controller.getInstance().changeCard("Homescreen");
-
+            CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+            cardLayout.show(mainPanel, "blank panel");
         }
 
     }//end of action performed 

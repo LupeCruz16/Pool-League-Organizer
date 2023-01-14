@@ -6,22 +6,21 @@ import javax.swing.*;
 public class homePanel extends JPanel implements ActionListener{
     
     private JButton playerInfo, bracket, weekly, exit;
-    private JLabel appName, blank, option;
+    private JLabel appName, option;
+    private JPanel blankPanel, sidePanel, mainPanel, headerPanel, sideAndMainPanel;
 
     public homePanel(){
 
         //Creating Panels
-        JPanel main = new JPanel();
-        JPanel prompt = new JPanel();
-        JPanel space = new JPanel();
-        JPanel space2 = new JPanel();
-        JPanel title = new JPanel();
-        JPanel middle = new JPanel();
-        JPanel button = new JPanel();
+        sidePanel = new JPanel();
+        mainPanel = new JPanel();
+        headerPanel = new JPanel();
+        sideAndMainPanel = new JPanel();
+        blankPanel = new JPanel();
 
-        //Creating buttons
-        playerInfo = new JButton("Create a Tournament");//creating uploading photos button 
-        playerInfo.addActionListener(this);//monitor if clicked 
+        //Creating a JButton for each new Panel to be displayed
+        playerInfo = new JButton("Create a Tournament"); //creating uploading photos button 
+        playerInfo.addActionListener(this); //monitor if clicked 
         uiDesign.formatButton(playerInfo);
 
         bracket = new JButton("View Tournament Bracket");
@@ -38,79 +37,88 @@ public class homePanel extends JPanel implements ActionListener{
 
         //Creating Labels
         appName = new JLabel("Welcome To The League Manager");
+        appName.setBorder(BorderFactory.createMatteBorder(0, 100, 0, 100, colorPalette.poolBlue));
         appName.setFont(new Font("Arial", Font.BOLD, 40));//resizing text within label
         appName.setForeground(Color.white);
 
         option = new JLabel("Please choose an option");
         option.setFont(new Font("Arial", Font.PLAIN, 25));//resizing text within label
-        option.setForeground(Color.white);
+        option.setForeground(Color.gray);
 
-        blank = new JLabel("");
-
-        //Adding elements to panels 
-        space.add(blank);
-        space.setPreferredSize(new Dimension(820, 35));
-        space.setBackground(colorPalette.poolBlue);
-        space.setBackground(colorPalette.defaultGrey);
-
-        title.add(appName);
-        title.setPreferredSize(new Dimension(820, 65));
-        title.setBackground(colorPalette.poolBlue);
-
-        prompt.add(option);
-        prompt.setPreferredSize(new Dimension(820, 45));
-        prompt.setBackground(colorPalette.poolBlue);
-
-        middle.setLayout(new BoxLayout(middle, BoxLayout.Y_AXIS));
-        middle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        middle.setBackground(colorPalette.defaultGrey);
-
-        uiDesign.spacer(middle);
-        middle.add(playerInfo);
-        uiDesign.spacer(middle);
-        middle.add(bracket);
-        uiDesign.spacer(middle);
-        middle.add(weekly);
-        uiDesign.spacer(middle);
-        middle.add(exit);
-
-        space2.setBackground(colorPalette.defaultGrey);
-        uiDesign.spacer(space2);
-        button.setBackground(colorPalette.defaultGrey);
+        //Adding elements to panels
+        headerPanel.setLayout(new BoxLayout(headerPanel,BoxLayout.Y_AXIS));
+        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,100));
+        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        uiDesign.spacer(headerPanel,20,20);
+        headerPanel.add(appName);
+        appName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        uiDesign.spacer(headerPanel,20,20);
+        headerPanel.setBackground(colorPalette.poolBlue);
         
-        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-        main.setBackground(colorPalette.defaultGrey);
+        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS)); 
+        sidePanel.setBackground(colorPalette.defaultGrey);
+        uiDesign.spacer(sidePanel,20,20);
+        sidePanel.add(playerInfo);
+        uiDesign.spacer(sidePanel,20,20);
+        sidePanel.add(bracket);
+        uiDesign.spacer(sidePanel,20,20);
+        sidePanel.add(weekly);
+        uiDesign.spacer(sidePanel,20,20);
+        sidePanel.add(exit);
 
-        uiDesign.spacer(main);
-        main.add(title);
-        main.add(prompt);
-        main.add(middle);
-        main.add(button);
+        mainPanel.setLayout(new CardLayout());
+        mainPanel.setBackground(colorPalette.defaultGrey);
 
-        //adding for display 
-        add(main);
+        blankPanel.setLayout(new BoxLayout(blankPanel, BoxLayout.Y_AXIS));
+        uiDesign.spacer(blankPanel,10,100);
+        blankPanel.add(option);
+        option.setAlignmentX(Component.CENTER_ALIGNMENT);
+        blankPanel.setBackground(colorPalette.defaultGrey);
+       
+        //Instantiate the panel Classes
+        playerPanel playerPanel = new playerPanel();
+        tourneyPanel tourneyPanel = new tourneyPanel();
+        weeklyPanel weeklyPanel = new weeklyPanel();
 
-        //displaying panel
-        setVisible(true);
-        setSize(500, 500);
+        mainPanel.add(blankPanel, "blank panel");
+        mainPanel.add(playerPanel, "player panel");
+        mainPanel.add(tourneyPanel, "tourney panel");
+        mainPanel.add(weeklyPanel, "weekly panel");
 
+        sideAndMainPanel.setLayout(new BoxLayout(sideAndMainPanel, BoxLayout.X_AXIS));
+        sideAndMainPanel.setBackground(colorPalette.defaultGrey);
+        sideAndMainPanel.add(sidePanel, BorderLayout.WEST);
+        sideAndMainPanel.add(mainPanel);
+
+        //Keeping the header panel and the main panel vertical from eachother
+        Box mainBox = Box.createVerticalBox();
+        sideAndMainPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE));
+        mainBox.add(headerPanel);
+        mainBox.add(sideAndMainPanel);
+        add(mainBox);
+       
     }//end of main class
- 
-    //if button is clicked preform an action
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource() == playerInfo){
-            controller.getInstance().changeCard("Upload Player Info");
-        }
-        else if(e.getSource() == bracket){
-           controller.getInstance().changeCard("View Bracket");
-        }
-        else if(e.getSource() == weekly){
-            controller.getInstance().changeCard("Weekly Matches");
-        }
-        else if(e.getSource() == exit){
+
+    //If a button is clicked then perform this action
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == playerInfo) {
+            CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+            cardLayout.show(mainPanel, "player panel");
+        } else if (e.getSource() == bracket) {
+            CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+            cardLayout.show(mainPanel, "tourney panel");
+        } else if (e.getSource() == weekly) {
+            CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+            cardLayout.show(mainPanel, "weekly panel");
+        } else if(e.getSource() == exit) {
             System.exit(0);
         }
+    }
 
-    }//end of action preformed 
+    //Get access to mainpanel
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
 
 }//end of class 
+

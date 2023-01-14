@@ -9,9 +9,10 @@ public class weeklyPanel extends JPanel implements ActionListener{
     public weeklyPanel(){
 
         JPanel main = new JPanel();
+        setBackground(colorPalette.defaultGrey);
 
         //Creating Buttons
-        back = new JButton("<-");
+        back = new JButton("Back");
         back.addActionListener(this);
         uiDesign.formatButton(back);
 
@@ -24,8 +25,12 @@ public class weeklyPanel extends JPanel implements ActionListener{
 
     public void actionPerformed(ActionEvent e){
 
+        homePanel home = controller.getInstance().getHomePanel();
+        JPanel mainPanel = home.getMainPanel();
+
         if(e.getSource() == back){
-            controller.getInstance().changeCard("Homescreen");
+            CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+            cardLayout.show(mainPanel, "blank panel");
         }
 
     }//End of actionPerformed
