@@ -10,7 +10,8 @@ public class debug {
 
         System.out.println("Avail: ");
         for(int i = 0; i < playerObject.DAYS; i++){
-            System.out.println(player.getStartAvail(i) + "-" + player.getEndAvail(i) + " ");
+
+            System.out.println(player.getStandardStartTime(i) + "-" + player.getStandardEndTime(i) + " ");
         }
 
         long score = player.getAvailScore().toMinutes();

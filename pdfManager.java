@@ -83,10 +83,6 @@ public class pdfManager {
     private static void matchPairGen(){
         
         ArrayList<String> names = new ArrayList<>(players.keySet());//creating an array list of players names from the hash map
-
-        for(int i = 0; i < names.size(); i++){
-            debug.displayPlayer(names.get(i));
-        }
         
         //sorting the list based on their availability score
         Collections.sort(names, new Comparator<String>(){
