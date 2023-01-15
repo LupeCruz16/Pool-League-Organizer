@@ -7,14 +7,14 @@ public class homePanel extends JPanel implements ActionListener{
     
     private JButton playerInfo, bracket, weekly, exit;
     private JLabel appName, option;
-    private JPanel blankPanel, sidePanel, mainPanel, headerPanel, sideAndMainPanel;
+    private JPanel blankPanel, sidePanel, mainPanel, sideAndMainPanel;
+    private JSeparator separator;
 
     public homePanel(){
 
         //Creating Panels
         sidePanel = new JPanel();
         mainPanel = new JPanel();
-        headerPanel = new JPanel();
         sideAndMainPanel = new JPanel();
         blankPanel = new JPanel();
 
@@ -36,41 +36,42 @@ public class homePanel extends JPanel implements ActionListener{
         uiDesign.formatButton(exit);
 
         //Creating Labels
-        appName = new JLabel("Welcome To The League Manager");
-        appName.setBorder(BorderFactory.createMatteBorder(0, 100, 0, 100, colorPalette.poolBlue));
-        appName.setFont(new Font("Arial", Font.BOLD, 40));//resizing text within label
+        appName = new JLabel("League Manager");
+        appName.setFont(new Font("Arial", Font.BOLD,30));//resizing text within label
+        appName.setPreferredSize(new Dimension(300, 45));
+        appName.setHorizontalAlignment(JLabel.CENTER);
         appName.setForeground(Color.white);
 
         option = new JLabel("Please choose an option");
         option.setFont(new Font("Arial", Font.PLAIN, 25));//resizing text within label
         option.setForeground(Color.gray);
 
+        //Creating a line separator
+        separator = new JSeparator();
+        separator.setOrientation(JSeparator.HORIZONTAL);
+        separator.setPreferredSize(new Dimension(240, 2));
+
         //Adding elements to panels
-        headerPanel.setLayout(new BoxLayout(headerPanel,BoxLayout.Y_AXIS));
-        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,100));
-        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        uiDesign.spacer(headerPanel,20,20);
-        headerPanel.add(appName);
-        appName.setAlignmentX(Component.CENTER_ALIGNMENT);
-        uiDesign.spacer(headerPanel,20,20);
-        headerPanel.setBackground(colorPalette.poolBlue);
-        
-        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS)); 
-        sidePanel.setBackground(colorPalette.defaultGrey);
-        uiDesign.spacer(sidePanel,20,20);
+        sidePanel.setLayout(new FlowLayout()); 
+        sidePanel.setPreferredSize(new Dimension(300,800));
+        sidePanel.setBackground(colorPalette.poolBlue);
+        uiDesign.spacer(sidePanel,20,80);
+        sidePanel.add(appName);
+        sidePanel.add(separator);
+        uiDesign.spacer(sidePanel,60,60);
         sidePanel.add(playerInfo);
-        uiDesign.spacer(sidePanel,20,20);
+        uiDesign.spacer(sidePanel,20,25);
         sidePanel.add(bracket);
-        uiDesign.spacer(sidePanel,20,20);
+        uiDesign.spacer(sidePanel,20,25);
         sidePanel.add(weekly);
-        uiDesign.spacer(sidePanel,20,20);
+        uiDesign.spacer(sidePanel,20,25);
         sidePanel.add(exit);
 
         mainPanel.setLayout(new CardLayout());
-        mainPanel.setBackground(colorPalette.defaultGrey);
+        mainPanel.setPreferredSize(new Dimension(700, 800));
 
         blankPanel.setLayout(new BoxLayout(blankPanel, BoxLayout.Y_AXIS));
-        uiDesign.spacer(blankPanel,10,100);
+        uiDesign.spacer(blankPanel,10,400);
         blankPanel.add(option);
         option.setAlignmentX(Component.CENTER_ALIGNMENT);
         blankPanel.setBackground(colorPalette.defaultGrey);
@@ -85,15 +86,14 @@ public class homePanel extends JPanel implements ActionListener{
         mainPanel.add(tourneyPanel, "tourney panel");
         mainPanel.add(weeklyPanel, "weekly panel");
 
-        sideAndMainPanel.setLayout(new BoxLayout(sideAndMainPanel, BoxLayout.X_AXIS));
+        sideAndMainPanel.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         sideAndMainPanel.setBackground(colorPalette.defaultGrey);
-        sideAndMainPanel.add(sidePanel, BorderLayout.WEST);
+        sideAndMainPanel.add(sidePanel);
         sideAndMainPanel.add(mainPanel);
 
         //Keeping the header panel and the main panel vertical from eachother
         Box mainBox = Box.createVerticalBox();
         sideAndMainPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE));
-        mainBox.add(headerPanel);
         mainBox.add(sideAndMainPanel);
         add(mainBox);
        

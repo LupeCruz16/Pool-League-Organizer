@@ -56,7 +56,7 @@ public class playerPanel extends JPanel implements ActionListener{
         
         main.setBackground(colorPalette.defaultGrey);
 
-        uiDesign.spacer(main,20,20);
+        uiDesign.spacer(main,60,60);
         main.add(upload);
         upload.setAlignmentX(Component.CENTER_ALIGNMENT);
 
