@@ -41,6 +41,12 @@ public class debug {
         }
     }
 
+    public static void displayMatches(){
+        for(int i = 0; i < pdfManager.matches.size(); i++){
+            System.out.println("Matches in ArrayList: " + pdfManager.matches.get(i).getPlayer1() + " v " +  pdfManager.matches.get(i).getPlayer2());
+        }
+    }
+
     public static void dislpayWeeklyMatches(){
         LocalDate[] dates = tourneyManager.schedule.keySet().toArray(new LocalDate[tourneyManager.schedule.size()]);
 

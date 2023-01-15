@@ -85,8 +85,8 @@ public class pdfManager {
     }
 
     /**
-     * First sorts players based on their availability score. Then generates a unique array list of match objects 
-     * that stores players in pairs to verify if a match can be made
+     * First sorts players based on their availability score in descending order. Then generates a unique array 
+     * list of match objects that stores players in pairs to later verify if a match can be made between the pair
      */
     private static void matchPairGen(){
         
@@ -95,15 +95,16 @@ public class pdfManager {
         //sorting the list based on their availability score
         Collections.sort(names, new Comparator<String>(){
             public int compare(String name1, String name2){
-                return players.get(name1).getAvailScore().compareTo(players.get(name2).getAvailScore());
+                return players.get(name2).getAvailScore().compareTo(players.get(name1).getAvailScore());
 
             }
         });
 
         //generating the players matches based on thier scores 
-        for(int i = 0; i < players.size(); i++){//itterates through the entire player HashMap
-            for(int j = i + 1; j < players.size(); j++){//goes through the following player after i 
+        for(int i = 0; i < names.size(); i++){//itterates through the entire array list of names
+            for(int j = i + 1; j < names.size(); j++){//goes through the following name after i 
                 matches.add(new matchObject(names.get(i), names.get(j)));//adding the pair into the match object
+
             }
         }
 
@@ -148,6 +149,7 @@ public class pdfManager {
         //if both names are found within the array list of matches then remove the match
         matches.removeIf(match -> (match.getPlayer1().equals(player1) && match.getPlayer2().equals(player2)) ||
         (match.getPlayer1().equals(player2) && match.getPlayer1().equals(player1)));
+
     }
 
 }//end of pdfManager

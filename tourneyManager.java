@@ -8,12 +8,19 @@ public class tourneyManager {
     static HashMap<LocalDate, tourneySchduleObject> schedule = new HashMap<LocalDate, tourneySchduleObject>();
 
     /**
-     * Work in progress
+     * Begins by itterating through array list of match pair generated from end to start. This prevents issues when removing
+     * the unique pairing after the match has been generated. 
+     * 
+     * Then collects each players name and utilizes a boolean ot organically break the for loop that itterates through the
+     * players availability. Once the loop is entered it obtains each players availability and acesses if a match can be made
+     * 
+     * After this is done, if matchVadlidity from utility.h is true then the players match counters are incremented and the loop
+     * is terminated
      */
     public static void matchGeneration(){
         boolean matchFound;//boolean used to break out of for loop when match was found
 
-        for(int i = 0; i < pdfManager.matches.size(); i++){//itterates through unique array list of matches
+        for(int i = pdfManager.matches.size() - 1; i >= 0 ; i--){//itterates through unique array list of matches in reverse
                 matchObject match = pdfManager.matches.get(i);//obtaining a single match that contains two player names
 
                 //collecting players names into strings
@@ -37,32 +44,20 @@ public class tourneyManager {
                         if(pdfManager.players.get(p1).getMatchCounter() <= playerObject.MAX_MATCHES &&
                         pdfManager.players.get(p2).getMatchCounter() <= playerObject.MAX_MATCHES){
 
-                            //checking to ensure that the players weekly match limit has not been reached
-                            //if(pdfManager.players.get(p1).getWeeklyMatchCoun() < enteredInfo.getMaxWeeklyMatches() &&
-                            //pdfManager.players.get(p2).getWeeklyMatchCoun() < enteredInfo.getMaxWeeklyMatches()){
+                            //if a match was generated between the players move to next player
+                            if(utility.matchValidity(j, p1, p1a1, p1a2, p2, p2a1, p2a2)){
 
-                                //if a match was generated between the players move to next player
-                                if(utility.matchValidity(j, p1, p1a1, p1a2, p2, p2a1, p2a2)){
+                                //updating the amount of matches that each player has scheduled
+                                pdfManager.players.get(p1).incrementMatchCounter();
+                                pdfManager.players.get(p2).incrementMatchCounter();
 
-                                    //updating the amount of matches that each player has scheduled
-                                    pdfManager.players.get(p1).incrementMatchCounter();
-                                    pdfManager.players.get(p2).incrementMatchCounter();
-
-                                    //updating their weekly match counter
-                                    //pdfManager.players.get(p1).incrementWeeklyMatchCoun();
-                                    //pdfManager.players.get(p2).incrementWeeklyMatchCoun();
-
-                                    pdfManager.matchDeletion(p1, p2);//removing that pairings match from possible matches array list 
-
-                                    matchFound = true;//set boolean to true as match was generated
-                                }
-                            //}
+                                pdfManager.matchDeletion(p1, p2);//removing that pairings match from possible matches array list 
+                                matchFound = true;//set boolean to true as match was generated
+                            }
                         }
                     }
                 }
-
         }
-
     }
 
 }//end of tourneyManager

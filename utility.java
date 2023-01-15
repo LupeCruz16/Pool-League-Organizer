@@ -95,19 +95,21 @@ public class utility {
     }//end of minute finder
 
     /**
-     * Work in progress 
+     * Boolean method used to determine if a match between two players was sucessfully generated. Uses Duration to account for
+     * a matches length and a grace period to avoid back to back matches. Obtains the players availability and determines if 
+     * their is time for a match to be generated and adds that time to each players generated match times for the day it was
+     * found in. 
      * 
-     * @param day
-     * @param name1
-     * @param p1a1
-     * @param p1a2
-     * @param name2
-     * @param p2a1
-     * @param p2a2
-     * @return
+     * @param day Day that the match would take place (Mon, Tues, Wed, Thur, Fri)
+     * @param name1 Player one of the match 
+     * @param p1a1 Player ones start availability of the day
+     * @param p1a2 Player ones end availability of the day
+     * @param name2 Player two of the match 
+     * @param p2a1 Player twos start availability of the day
+     * @param p2a2 Player twos start availability of the day
+     * @return True or false if the match was sucessfully generated 
      */
-    public static boolean matchValidity(int day, String name1, LocalTime p1a1, LocalTime p1a2, 
-                                        String name2, LocalTime p2a1, LocalTime p2a2){
+    public static boolean matchValidity(int day, String name1, LocalTime p1a1, LocalTime p1a2, String name2, LocalTime p2a1, LocalTime p2a2){
 
         //adding the duration of each match into a duration variable also accounting for a grace period
         Duration matchDuration = Duration.ofMinutes(20);
@@ -124,8 +126,6 @@ public class utility {
             //adding the time into the players possible matches
             pdfManager.players.get(name1).addGeneratedMatch(day, matchStart);
             pdfManager.players.get(name2).addGeneratedMatch(day, matchStart);
-
-            System.out.println("Match was added");
 
             return true;
         }
