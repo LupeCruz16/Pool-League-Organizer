@@ -7,7 +7,9 @@ public class tourneyManager {
     //contains tournament schedule
     static HashMap<LocalDate, tourneySchduleObject> schedule = new HashMap<LocalDate, tourneySchduleObject>();
 
-    //will find possible matches and add them into the Challonge API as found
+    /**
+     * Work in progress
+     */
     public static void matchGeneration(){
         boolean matchFound;//boolean used to break out of for loop when match was found
 
@@ -61,6 +63,6 @@ public class tourneyManager {
 
         }
 
-    }//end of match generation
+    }
 
 }//end of tourneyManager

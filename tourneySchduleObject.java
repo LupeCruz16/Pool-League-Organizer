@@ -1,46 +1,62 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-//Basic Information of this object
-//Contains:
-//          -scheduledDay for the day a match was made
-//          -an array list of match objects to maintain all the matches created that day
-//          -todaysMatches to see if any matches were added to this day and help with weekly match views 
-//Goal: 
-//          -Maintain matches generated for a day under one object to provide easier retrieval and viewing of single or 
-//           weekly match viewing 
 public class tourneySchduleObject {
 
-    private LocalDate scheduledDay;
-    private static ArrayList<matchObject> dayMatches = new ArrayList<>();
-    private int todaysMatches;
+    private LocalDate scheduledDay;//holds day for given matches
+    private static ArrayList<matchObject> dayMatches = new ArrayList<>();//holds all matches for a given day
+    private int todaysMatches;//keeps track of the amount of matches in one day
 
-    //Constructor
+    /**
+     * Class constructor used to keep track of the matches generated for a day under one single object
+     * 
+     * @param scheduledDay Will maintain the day the match will be added into
+     * @param match Will collect the match information when added in 
+     * 
+     */
     public tourneySchduleObject(LocalDate scheduledDay, matchObject match){
 
        this.scheduledDay = scheduledDay;
        this.todaysMatches = 0;
        dayMatches.add(todaysMatches, match);
 
-    }//End of constructor
+    }
 
-    //Getter and setter methods
+    /**
+     * Returns day of match schedule
+     * @return scheduled day
+     */
     public LocalDate getScheduledDay(){
        return scheduledDay;
     }
 
+    /**
+     * Obtains scheduled day for matches to be held
+     * @param scheduledDay Contains matches day
+     */
     public void setScheduledDay(LocalDate scheduledDay){
        this.scheduledDay = scheduledDay;
     }
 
+    /**
+     * Returns total matches for a given day 
+     * @return todays matches 
+     */
     public int getTodaysMatches(){
         return todaysMatches;
     }
 
+    /**
+     * Appends a match to the objects list of matches for the given day
+     * @param match Containd the new matches information
+     */
     public void addMatch(matchObject match){
         dayMatches.add(todaysMatches++, match);
     }
 
+    /**
+     * Displays all matches for the given day of the object
+     */
     public void displayMatches(){
 
         if(todaysMatches > 0){//if matches were generated and added for today
