@@ -16,7 +16,9 @@ public class pdfManager {
     static HashMap<String, playerObject> players = new HashMap<String, playerObject>();//used to store all players
     static ArrayList<matchObject> matches = new ArrayList<>();//used to generate matches
 
-    //user selecting files from device 
+    /**
+     * Obtains a PDF with the roster for a tournament and extracts the necessary information for tournament creation
+     */
     public static void readInFiles(){
 
         JFileChooser fileUpload = new JFileChooser();//creating file chooser
@@ -43,6 +45,7 @@ public class pdfManager {
 
                 tourneyManager.matchGeneration();//generate matches for all players
 
+                debug.displayAllPlayers();
                 //debug.dislpayWeeklyMatches();
 
                 pdfDocument.close();//closing document
@@ -52,9 +55,12 @@ public class pdfManager {
                 System.out.println("File cannot be opened: " + ex);//printing error message 
             } 
         }
-    }//end of read in files
+    }
 
-    //obtains each players information from a pdf of the pool league roster
+    /**
+     * Obtains each players information from the PDF roster 
+     * @param doc String conversion of the PDF roster
+     */
     private static void extractInfo(String doc){
 
         String[] lines = doc.split("\n");//obtains every new lines in the document text
@@ -76,17 +82,15 @@ public class pdfManager {
             players.put(name, new playerObject(name, email, avail));
             
         }
+    }
 
-    }//end of extract info
-
-    //generates a unique array list of match objects that stores players in pairs to verify if a match can be made
+    /**
+     * First sorts players based on their availability score. Then generates a unique array list of match objects 
+     * that stores players in pairs to verify if a match can be made
+     */
     private static void matchPairGen(){
         
         ArrayList<String> names = new ArrayList<>(players.keySet());//creating an array list of players names from the hash map
-
-        for(int i = 0; i < names.size(); i++){
-            debug.displayPlayer(names.get(i));
-        }
         
         //sorting the list based on their availability score
         Collections.sort(names, new Comparator<String>(){
@@ -105,7 +109,10 @@ public class pdfManager {
 
     }//end of match pair generation
 
-    //will generate all possible days that matches can be held 
+    /**
+     * Will generate all possible days that matches can be held and stores them in a hashmap of tourneyScheduleObjects
+     * The hashmap is in tourneyManager and serves a schedule of the tournements valid play days
+     */
     public static void matchDayGen(){//add after LocalDate startDay, LocalDate endDay
 
         //generating matches for the given length of the tournament 
@@ -129,14 +136,18 @@ public class pdfManager {
             }
         }
 
-    }//end of match days generation
+    }
 
-    //deletes a match from matches array list to show that a match has been made from the unique list of pairings
+    /**
+     * Deletes a match from matches array list to show prevent from that pairing to be made again 
+     * @param player1 Player ones name to be found in a match object
+     * @param player2 Player twos name to be found in a match object
+     */
     public static void matchDeletion(String player1, String player2){
 
         //if both names are found within the array list of matches then remove the match
         matches.removeIf(match -> (match.getPlayer1().equals(player1) && match.getPlayer2().equals(player2)) ||
         (match.getPlayer1().equals(player2) && match.getPlayer1().equals(player1)));
-    }//end of match deletion
+    }
 
 }//end of pdfManager
