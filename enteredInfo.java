@@ -10,6 +10,8 @@ public class enteredInfo {
     //obtaining the amount of weeks in the tournament
     static final long TOURNEY_WEEKS = ChronoUnit.WEEKS.between(STAR_DATE, END_DATE);
 
+    static final int POOL_TABLES = 3;//contains the amount of pool tables that matches can take place on
+
     //include pool table and tie to match object
 
     static final int MAX_MATCHES = 15;
