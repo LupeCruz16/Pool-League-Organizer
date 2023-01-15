@@ -7,7 +7,7 @@ public class homePanel extends JPanel implements ActionListener{
     
     private JButton playerInfo, bracket, weekly, exit;
     private JLabel appName, option;
-    private JPanel blankPanel, sidePanel, mainPanel, sideAndMainPanel;
+    private JPanel sidePanel, mainPanel, sideAndMainPanel;
     private JSeparator separator;
 
     public homePanel(){
@@ -16,12 +16,12 @@ public class homePanel extends JPanel implements ActionListener{
         sidePanel = new JPanel();
         mainPanel = new JPanel();
         sideAndMainPanel = new JPanel();
-        blankPanel = new JPanel();
 
         //Creating a JButton for each new Panel to be displayed
         playerInfo = new JButton("Create a Tournament"); //creating uploading photos button 
         playerInfo.addActionListener(this); //monitor if clicked 
         uiDesign.formatButton(playerInfo);
+        playerInfo.setBackground(colorPalette.poolDarkBlue);
 
         bracket = new JButton("View Tournament Bracket");
         bracket.addActionListener(this);
@@ -50,38 +50,29 @@ public class homePanel extends JPanel implements ActionListener{
         separator = new JSeparator();
         separator.setOrientation(JSeparator.HORIZONTAL);
         separator.setPreferredSize(new Dimension(240, 2));
+        separator.setAlignmentX(JSeparator.CENTER_ALIGNMENT);
 
         //Adding elements to panels
-        sidePanel.setLayout(new FlowLayout()); 
+        sidePanel.setLayout(new FlowLayout(FlowLayout.CENTER,0,0)); 
         sidePanel.setPreferredSize(new Dimension(300,800));
         sidePanel.setBackground(colorPalette.poolBlue);
-        uiDesign.spacer(sidePanel,20,80);
+        uiDesign.spacer(sidePanel,80,80);
         sidePanel.add(appName);
         sidePanel.add(separator);
-        uiDesign.spacer(sidePanel,60,60);
+        uiDesign.spacer(sidePanel,70,40);
         sidePanel.add(playerInfo);
-        uiDesign.spacer(sidePanel,20,25);
         sidePanel.add(bracket);
-        uiDesign.spacer(sidePanel,20,25);
         sidePanel.add(weekly);
-        uiDesign.spacer(sidePanel,20,25);
         sidePanel.add(exit);
 
         mainPanel.setLayout(new CardLayout());
         mainPanel.setPreferredSize(new Dimension(700, 800));
-
-        blankPanel.setLayout(new BoxLayout(blankPanel, BoxLayout.Y_AXIS));
-        uiDesign.spacer(blankPanel,10,400);
-        blankPanel.add(option);
-        option.setAlignmentX(Component.CENTER_ALIGNMENT);
-        blankPanel.setBackground(colorPalette.defaultGrey);
        
         //Instantiate the panel Classes
         playerPanel playerPanel = new playerPanel();
         tourneyPanel tourneyPanel = new tourneyPanel();
         weeklyPanel weeklyPanel = new weeklyPanel();
 
-        mainPanel.add(blankPanel, "blank panel");
         mainPanel.add(playerPanel, "player panel");
         mainPanel.add(tourneyPanel, "tourney panel");
         mainPanel.add(weeklyPanel, "weekly panel");
@@ -104,12 +95,21 @@ public class homePanel extends JPanel implements ActionListener{
         if (e.getSource() == playerInfo) {
             CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
             cardLayout.show(mainPanel, "player panel");
+            playerInfo.setBackground(colorPalette.poolDarkBlue);
+            bracket.setBackground(colorPalette.poolBlue);
+            weekly.setBackground(colorPalette.poolBlue);
         } else if (e.getSource() == bracket) {
             CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
             cardLayout.show(mainPanel, "tourney panel");
+            playerInfo.setBackground(colorPalette.poolBlue);
+            bracket.setBackground(colorPalette.poolDarkBlue);
+            weekly.setBackground(colorPalette.poolBlue);
         } else if (e.getSource() == weekly) {
             CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
             cardLayout.show(mainPanel, "weekly panel");
+            playerInfo.setBackground(colorPalette.poolBlue);
+            bracket.setBackground(colorPalette.poolBlue);
+            weekly.setBackground(colorPalette.poolDarkBlue);
         } else if(e.getSource() == exit) {
             System.exit(0);
         }

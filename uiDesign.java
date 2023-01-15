@@ -9,12 +9,13 @@ public class uiDesign extends JPanel{
     public static void formatButton(JButton button){
 
         //Sets up a default button layout
-        button.setPreferredSize(new Dimension(300, 45));
+        button.setPreferredSize(new Dimension(300, 60));
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setFont(new Font("Arial", Font.BOLD, 15));
         button.setForeground(Color.white);
         button.setBackground(colorPalette.poolBlue);
         button.setOpaque(true);
+        button.setFocusPainted(false);
         button.setBorderPainted(false);
     }
 
