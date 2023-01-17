@@ -55,6 +55,23 @@ public class tourneySchduleObject {
     }
 
     /**
+     * Returns match object from array list of the days matches
+     * @param pos obtains the position of the match
+     * @return match object
+     */
+    public matchObject getMatch(int pos){
+        return dayMatches.get(pos);
+    }
+
+    /**
+     * Removes a match from array list of day matches based on index 
+     * @param pos index of match to be removed 
+     */
+    public void removeMatch(int pos){
+        dayMatches.remove(pos);
+    }
+
+    /**
      * Displays all matches for the given day of the object
      */
     public void displayMatches(){

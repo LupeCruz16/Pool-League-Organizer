@@ -33,4 +33,20 @@ public class enteredInfo {
         }
     }//end of get max weekly matches 
 
+    public static int getMaxDailyMatches(){
+
+        int scheduleSize = tourneyManager.schedule.size();//obtaing the playable days from tourneyManager
+
+        if(scheduleSize == 0){//hashmap of the tournmanet schedule is empty
+            System.out.println("The tournament schedule is empty");
+            return scheduleSize;
+
+        } else {//tournement has dates within it
+            int dailyMatches = (MAX_MATCHES * pdfManager.players.size()) /  scheduleSize;//finding how many matches they should have per week
+            System.out.println("Daily matches: " + dailyMatches);
+            return dailyMatches;//return that number
+
+        }
+    }//end of get max weekly matches 
+
 }

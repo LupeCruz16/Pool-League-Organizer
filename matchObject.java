@@ -41,7 +41,7 @@ public class matchObject {
       this.table = 0;
 
       this.matchDay = LocalDate.of(2023, 1, 1);//default to January 1st of 2023
-      this.matchTime = LocalTime.of(12, 12);//defaulting time of match start at 12:12
+      this.matchTime = LocalTime.MIN;//defaulting time of match start at 00:00
 
    }
   

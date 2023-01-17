@@ -43,10 +43,14 @@ public class pdfManager {
                 matchPairGen();//generates a unique list of pair players 
                 matchDayGen();//generates an array list of playable days in the tournament, excluding weekends
 
-                tourneyManager.matchGeneration();//generate matches for all players
+                tourneyManager.matchTimeGeneration();//generate match times for all players
 
-                debug.displayAllPlayers();
-                //debug.dislpayWeeklyMatches();
+                //debug.displayAllPlayers();
+
+                //System.out.println("All matches left: ");
+                //debug.displayMatches();
+
+                tourneyManager.displayTourneySchedule();;
 
                 pdfDocument.close();//closing document
                 fis.close();//closing file input stream

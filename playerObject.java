@@ -16,7 +16,7 @@ public class playerObject {
     //variables for basic fields
     private String name, email;
     private Duration availScore;//will determine in what order they are paired up based on how available they are
-    private int  matchCounter, weeklyMatchCount;//keeps track of current number of matches scheudled and how many are allowed per week
+    private int  matchCounter;//keeps track of current number of matches scheudled
     private int wins, losses;//keeps track of players wins and losses
 
     /**
@@ -59,16 +59,11 @@ public class playerObject {
         }
 
         matchCounter = 0;
-        weeklyMatchCount = 0;
-
         wins = 0;
         losses = 0;
 
     }
     
-    //generate all matches and then check player avail. if goes over then skip
-    //list of days for matches and if match is scheduled the same day then add 30 mintues and ensure is still valid 
-
     /**
      * Returns players name
      * @return name
@@ -187,6 +182,14 @@ public class playerObject {
     }
 
     /**
+     * Returns how many match times have been added into the array list of LocalTime 
+     * @return LocalTime array list size
+     */
+    public int getSingleDayNumOfMatches(int day){
+        return generatedMatches[day].size();
+    }
+
+    /**
      * Returns the players availaility score 
      * @return availability score 
      */
@@ -207,28 +210,6 @@ public class playerObject {
      */
     public int getMatchCounter(){
         return matchCounter;
-    }
-
-    /**
-     * Resets weekly match counter and makes it so the player may have more matches scheduled for the next week 
-     */
-    public void resetWeeklyMatchCount(){
-        this.weeklyMatchCount = 0;
-    }
-
-    /**
-     * Increments weekly match counter 
-     */
-    public void incrementWeeklyMatchCoun(){
-        this.weeklyMatchCount++;
-    }
-
-    /**
-     * Returns weekly match counter 
-     * @return weekly match counter 
-     */
-    public int getWeeklyMatchCoun(){
-        return weeklyMatchCount;
     }
 
     /**

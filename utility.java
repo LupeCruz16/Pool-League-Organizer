@@ -1,4 +1,4 @@
-import java.time.Duration;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -95,42 +95,26 @@ public class utility {
     }//end of minute finder
 
     /**
-     * Boolean method used to determine if a match between two players was sucessfully generated. Uses Duration to account for
-     * a matches length and a grace period to avoid back to back matches. Obtains the players availability and determines if 
-     * their is time for a match to be generated and adds that time to each players generated match times for the day it was
-     * found in. 
-     * 
-     * @param day Day that the match would take place (Mon, Tues, Wed, Thur, Fri)
-     * @param name1 Player one of the match 
-     * @param p1a1 Player ones start availability of the day
-     * @param p1a2 Player ones end availability of the day
-     * @param name2 Player two of the match 
-     * @param p2a1 Player twos start availability of the day
-     * @param p2a2 Player twos start availability of the day
-     * @return True or false if the match was sucessfully generated 
+     * Returns day of the week dpending on the integer entered. With the default case being an invalid day of Sunday
+     * @param day Integer of day of the week Mon-Fri
+     * @return DayOfWeek
      */
-    public static boolean matchValidity(int day, String name1, LocalTime p1a1, LocalTime p1a2, String name2, LocalTime p2a1, LocalTime p2a2){
-
-        //adding the duration of each match into a duration variable also accounting for a grace period
-        Duration matchDuration = Duration.ofMinutes(20);
-        Duration gracePeriod = Duration.ofMinutes(10);
-
-        //finding overlapping time to schedule a match
-        LocalTime availStart = p1a1.isAfter(p2a1) ? p1a1 : p2a1;
-        LocalTime availEnd = p1a2.isBefore(p2a2) ? p1a2 : p2a2;
-
-        //checking if there is enough time for the match including a grace period 
-        if(availStart.plus(matchDuration).plus(gracePeriod).isBefore(availEnd)){
-            LocalTime matchStart = availStart;//will be used for match scheudling 
-
-            //adding the time into the players possible matches
-            pdfManager.players.get(name1).addGeneratedMatch(day, matchStart);
-            pdfManager.players.get(name2).addGeneratedMatch(day, matchStart);
-
-            return true;
+    public static DayOfWeek dayOfWeekMatchFound(int day){
+        
+        switch(day){
+            case 0: 
+                return DayOfWeek.MONDAY;
+            case 1: 
+                return DayOfWeek.TUESDAY;
+            case 2: 
+                return DayOfWeek.WEDNESDAY;
+            case 3: 
+                return DayOfWeek.THURSDAY;
+            case 4: 
+                return DayOfWeek.FRIDAY;
+            default: 
+                return DayOfWeek.SUNDAY;
         }
-        return false;
-
     }
 
 }//end of utility
