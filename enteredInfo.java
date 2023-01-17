@@ -43,7 +43,6 @@ public class enteredInfo {
 
         } else {//tournement has dates within it
             int dailyMatches = (MAX_MATCHES * pdfManager.players.size()) /  scheduleSize;//finding how many matches they should have per week
-            System.out.println("Daily matches: " + dailyMatches);
             return dailyMatches;//return that number
 
         }

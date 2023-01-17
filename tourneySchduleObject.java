@@ -1,10 +1,13 @@
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class tourneySchduleObject {
 
     private LocalDate scheduledDay;//holds day for given matches
-    private static ArrayList<matchObject> dayMatches = new ArrayList<>();//holds all matches for a given day
+    private ArrayList<matchObject> dayMatches = new ArrayList<>();//holds all matches for a given day
+    private HashMap<LocalTime, Integer> matchTimes = new HashMap<>();//holds all times for the matches of the day
     private int todaysMatches;//keeps track of the amount of matches in one day
 
     /**
@@ -69,6 +72,35 @@ public class tourneySchduleObject {
      */
     public void removeMatch(int pos){
         dayMatches.remove(pos);
+    }
+
+    /**
+     * Will ensure a table is open given a certain time from the hashmap of matchTimes
+     * @param time time to be either added or rejected
+     * @return true or false if added or rejected
+     */
+    public boolean tableOpen(LocalTime time){
+
+        if(matchTimes.containsKey(time)){//if times hash map already contains the time
+            int count = matchTimes.get(time);//count is set to the integer value associated with the time
+
+            ///
+            ///
+            ///
+            ///need to account for times interfering with eachother 
+            ///
+            ///
+            ///
+            if(count < enteredInfo.POOL_TABLES){//if more room for tables to be used 
+                this.matchTimes.put(time, count + 1);//put the time into matchTimes hashmap
+                return true;//sucessfully added
+            } else {
+                return false;//was not added
+            }
+        } else {//if key is not within the hashmap
+            this.matchTimes.put(time, 1);//add it to the hashmap
+            return true;//sucessfully added 
+        }
     }
 
     /**

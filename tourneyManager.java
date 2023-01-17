@@ -95,28 +95,30 @@ public class tourneyManager {
         LocalDate[] dates = schedule.keySet().toArray(new LocalDate[schedule.size()]);//obtaining schedule days 
         boolean matchAdded = false;//used to break out of for loop when match was sucessfully added into the schedules day
 
-        for(int i = 0; !matchAdded && dates[i].getDayOfWeek() != weekDay && i < dates.length; i ++){//itterates through all playable days on a weekly basis
-
-            LocalDate date = dates[i];//contains the specific date within the array
-            match.getTime();//if time exists in current day and is > 3 dont add 
+        for(int i = 0; !matchAdded && i < dates.length; i++){//iterates through entire array of dates until match is added
+            LocalDate date = dates[i];//obtains date
 
             //if dates week day is the same day that the match was scheduled within the players availability 
             if(date.getDayOfWeek() == weekDay){
-                if(schedule.get(date).getMatch(0).getTime() == LocalTime.MIN){//if current day has no real match scheduled
+
+                //if current day has no real match scheduled
+                if(schedule.get(date).getMatch(0).getTime() == LocalTime.MIN){
                     schedule.get(date).removeMatch(0);//first remove the match from the array list
                     schedule.get(date).addMatch(match);//add the new match into the array list
-    
-                } else {
-                    //if today has more room for matches
-                    if(schedule.get(date).getTodaysMatches() < enteredInfo.getMaxDailyMatches()){
-                        schedule.get(date).addMatch(match);
-                     
-                    } else { //if the day has no more room move to the next weeks same day of the week
+                    matchAdded = true;//breaking out of for loop
 
+                } else {//if there are matches in the current date
+                    //if the day has more room for matches
+                    if(schedule.get(date).getTodaysMatches() < enteredInfo.getMaxDailyMatches()){
+                        //if there is a table open during the match start time 
+                        if(schedule.get(date).tableOpen(match.getTime())){
+                            schedule.get(date).addMatch(match);//add the match to the date 
+                            matchAdded = true;//breaking out of for loop
+                            
+                        }
                     }
                     
                 }
-                matchAdded = true;//breaking out of for loop
             }
 
         }
