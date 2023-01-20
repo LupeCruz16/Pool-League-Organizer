@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class tourneySchduleObject {
@@ -9,6 +10,8 @@ public class tourneySchduleObject {
     private ArrayList<matchObject> dayMatches = new ArrayList<>();//holds all matches for a given day
     private HashMap<LocalTime, Integer> matchTimes = new HashMap<>();//holds all times for the matches of the day
     private int todaysMatches;//keeps track of the amount of matches in one day
+
+    //private TreeMap<LocalTime, ArrayList<LocalTime>> matchTimes = new TreeMap<>();
 
     /**
      * Class constructor used to keep track of the matches generated for a day under one single object
@@ -75,32 +78,66 @@ public class tourneySchduleObject {
     }
 
     /**
-     * Will ensure a table is open given a certain time from the hashmap of matchTimes
-     * @param time time to be either added or rejected
-     * @return true or false if added or rejected
+     * Will soley add a time to the objects hash map bsed on if the current times do not interfere
+     * @param time time to be added
      */
-    public boolean tableOpen(LocalTime time){
+    public void matchTimeAdded(LocalTime time){
 
-        if(matchTimes.containsKey(time)){//if times hash map already contains the time
-            int count = matchTimes.get(time);//count is set to the integer value associated with the time
-
-            ///
-            ///
-            ///
-            ///need to account for times interfering with eachother 
-            ///
-            ///
-            ///
-            if(count < enteredInfo.POOL_TABLES){//if more room for tables to be used 
-                this.matchTimes.put(time, count + 1);//put the time into matchTimes hashmap
-                return true;//sucessfully added
-            } else {
-                return false;//was not added
-            }
-        } else {//if key is not within the hashmap
-            this.matchTimes.put(time, 1);//add it to the hashmap
-            return true;//sucessfully added 
+        if(!matchTimes.containsKey(time)){//if times hash map does not contain the time then add it
+            this.matchTimes.put(time, 1);//add it to the hash map
+        } else if (matchPossibility(time)){
+            int count = matchTimes.get(time);
+            this.matchTimes.put(time, count + 1);
         }
+    }
+
+    /**
+     * Checks if there is time for a match based on: before and after the match time. If there is space then it return true
+     * @param time time that the match is set to occur
+     * @return true or false if there is time for the match
+     */
+    private boolean matchPossibility(LocalTime time){
+       LocalTime[] times = this.matchTimes.keySet().toArray(new LocalTime[matchTimes.size()]);
+        Arrays.sort(times);//sorting array 
+
+        Long mins = adminInfo.MATCH_DURATION.plus(adminInfo.GRACE_PERIOD).toMinutes();
+        LocalTime beforeMatch = time.minusMinutes(mins);
+        LocalTime afterMatch = time.plusMinutes(mins);
+
+        int before = closestIndex(times, beforeMatch);
+        int after = closestIndex(times, afterMatch);
+        int count = 0;
+       
+        for(int i = before; i < after; i++){
+            if(this.matchTimes.get(times[i]) > 1){
+                count += this.matchTimes.get(times[i]);
+            } else {
+                count++;
+            }
+        }
+
+        if(count < adminInfo.POOL_TABLES){
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * Returns the closest index or exact index of a time in order to verify if a match has enough time to occur
+     * @param times time that the match is set to occur
+     * @param beforeOrAfter determines which time either before or after is attempting to be found
+     * @return either exact or closest index of the before or after time 
+     */
+    private int closestIndex(LocalTime[] times, LocalTime beforeOrAfter){
+
+        int index = Arrays.binarySearch(times, beforeOrAfter, LocalTime::compareTo);
+        
+        if(index < 0){
+            index = -(index + 1);
+        }
+
+        return index;
     }
 
     /**

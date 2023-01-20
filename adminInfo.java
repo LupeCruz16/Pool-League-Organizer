@@ -1,7 +1,8 @@
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class enteredInfo {
+public class adminInfo {
     
     static final LocalDate STAR_DATE = LocalDate.of(2023, 1, 3);
 
@@ -15,6 +16,10 @@ public class enteredInfo {
     //include pool table and tie to match object
 
     static final int MAX_MATCHES = 15;
+
+    static final Duration MATCH_DURATION = Duration.ofMinutes(20);
+    
+    static final Duration GRACE_PERIOD = Duration.ofMinutes(10);
 
     //obtains the max weekly matches that a player can have to continue and have matches throughout the tournament
     public static int getMaxWeeklyMatches(){

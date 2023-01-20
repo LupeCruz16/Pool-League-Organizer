@@ -44,16 +44,16 @@ public class tourneyManager {
                     if(p1a1 != LocalTime.MIN && p2a1 != LocalTime.MIN){//if either player is available that day try to generate a match
 
                         //checking to make sure that their max weekly matches have not been met
-                        if(pdfManager.players.get(p1).getSingleDayNumOfMatches(j) < enteredInfo.getMaxWeeklyMatches() &&
-                        pdfManager.players.get(p2).getSingleDayNumOfMatches(j) < enteredInfo.getMaxWeeklyMatches()){
+                        if(pdfManager.players.get(p1).getSingleDayNumOfMatches(j) < adminInfo.getMaxWeeklyMatches() &&
+                        pdfManager.players.get(p2).getSingleDayNumOfMatches(j) < adminInfo.getMaxWeeklyMatches()){
 
                             //checking to ensure that another match can be added to each players match counter
                             if(pdfManager.players.get(p1).getMatchCounter() <= playerObject.MAX_MATCHES &&
                             pdfManager.players.get(p2).getMatchCounter() <= playerObject.MAX_MATCHES){
 
                                 //adding the duration of each match into a duration variable also accounting for a grace period
-                                Duration matchDuration = Duration.ofMinutes(20);
-                                Duration gracePeriod = Duration.ofMinutes(10);
+                                Duration matchDuration = adminInfo.MATCH_DURATION;
+                                Duration gracePeriod = adminInfo.GRACE_PERIOD;
 
                                 //finding overlapping time to schedule a match
                                 LocalTime availStart = p1a1.isAfter(p2a1) ? p1a1 : p2a1;
@@ -108,16 +108,16 @@ public class tourneyManager {
                     matchAdded = true;//breaking out of for loop
 
                 } else {//if there are matches in the current date
-                    //if the day has more room for matches
-                    if(schedule.get(date).getTodaysMatches() < enteredInfo.getMaxDailyMatches()){
-                        //if there is a table open during the match start time 
-                        if(schedule.get(date).tableOpen(match.getTime())){
-                            schedule.get(date).addMatch(match);//add the match to the date 
-                            matchAdded = true;//breaking out of for loop
-                            
-                        }
-                    }
-                    
+                        ///work in progress////
+                       
+                        schedule.get(date).matchTimeAdded(match.getTime());//adds the time into the hash map of match times
+
+                        //still have to check and ensure that a person cannot play the same day at the same time 
+
+
+                        schedule.get(date).addMatch(match);//add the match to the date 
+                        matchAdded = true;//breaking out of for loop
+
                 }
             }
 

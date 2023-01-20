@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class playerObject {
     public final static int DAYS = 5;//setting max availability array size to 5 for the five days of the week
-    public final static int MAX_MATCHES = enteredInfo.MAX_MATCHES;
+    public final static int MAX_MATCHES = adminInfo.MAX_MATCHES;
 
     //contain the start and end times of the players availaility from their indexes
     private LocalTime[] start = new LocalTime[DAYS];

@@ -105,8 +105,8 @@ public class pdfManager {
         });
 
         //generating the players matches based on thier scores 
-        for(int i = 0; i < names.size(); i++){//itterates through the entire array list of names
-            for(int j = i + 1; j < names.size(); j++){//goes through the following name after i 
+        for(int i = 0; i < names.size(); i++){//iterates through the entire array list of names
+            for(int j = i + 1; j < names.size(); j++){//iterates through the following name after i 
                 matches.add(new matchObject(names.get(i), names.get(j)));//adding the pair into the match object
 
             }
@@ -121,8 +121,8 @@ public class pdfManager {
     public static void matchDayGen(){//add after LocalDate startDay, LocalDate endDay
 
         //generating matches for the given length of the tournament 
-        LocalDate startDay = enteredInfo.STAR_DATE;
-        LocalDate endDay = enteredInfo.END_DATE;
+        LocalDate startDay = adminInfo.STAR_DATE;
+        LocalDate endDay = adminInfo.END_DATE;
 
         while(!startDay.isAfter(endDay)){//while not at the final day of the tournament
 
