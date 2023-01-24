@@ -3,7 +3,7 @@ import java.time.LocalTime;
 
 public class matchObject {
 
-   private String player1, player2;//coontains both oppponents names for the match
+   private playerObject player1, player2;//coontains both oppponents names for the match
    private int table;//contains the pool table the match will take place on 
    private LocalDate matchDay;//contains the day the match is scheduled 
    private LocalTime matchTime;//contains the time the match is scheduled 
@@ -19,62 +19,20 @@ public class matchObject {
     * @hidden matchDay contains the day the match is scheduled 
     * @hidden matchTime contains the time the match is scheduled 
    */
-   public matchObject(String player1, String player2){
+   public matchObject(playerObject player1, playerObject player2){
 
       this.player1 = player1;
       this.player2 = player2;
       this.table = 0;
 
-      this.matchDay = LocalDate.of(2023, 1, 1);//default to January 1st of 2023
-      this.matchTime = LocalTime.of(12, 12);//defaulting time of match start at 12:12
-
    }
 
-   /**
-    * matchObject default constructor 
-    * Constains the same variables as the constructor but sets these variables to predetermines values
-    */
-   public matchObject(){
-
-      this.player1 = "Unkown";
-      this.player2 = "Unkown";
-      this.table = 0;
-
-      this.matchDay = LocalDate.of(2023, 1, 1);//default to January 1st of 2023
-      this.matchTime = LocalTime.MIN;//defaulting time of match start at 00:00
-
-   }
-  
-   /**
-    * Returns player ones name
-    * @return player one name
-    */
-   public String getPlayer1(){
+   public playerObject getP1(){
       return player1;
    }
 
-   /**
-    * Sets player ones name
-    * @param player1 Used to set matches first player
-    */
-   public void setPlayer1(String player1){
-     this.player1 = player1;
-   }
-
-   /**
-    * Returns player twos name
-    * @return player twos name
-    */
-   public String getPlayer2(){
-     return player2;
-   }
-
-   /**
-    * Sets player twos name
-    * @param player2 Used to set matches second player
-    */
-   public void setPlayer2(String player2){
-     this.player2 = player2;
+   public playerObject getP2(){
+      return player2;
    }
 
    /**
@@ -102,6 +60,14 @@ public class matchObject {
    }
 
    /**
+    * Returns match day as a local date instead of string
+    * @return matchDay
+    */
+   public LocalDate getMatchDate(){
+      return matchDay;
+   }
+
+   /**
     * Sets the day the match will take place on 
     * @param day LocalDate of day of the match
     */
@@ -115,6 +81,19 @@ public class matchObject {
     */
    public LocalTime getTime(){
      return matchTime;
+   }
+
+   /**
+    * Returns the match time generated as standard time instead of "17:00" will be returned as "5:00"
+    * @return string as standard time 
+    */
+   public String getStandardTime(){
+      String time = LocalTime.of(matchTime.getHour() % 12, matchTime.getMinute()).toString();
+
+        if(time.charAt(0) == '0'){//if time is "02:00"
+            time = time.substring(1, time.length());//change to "2:00"
+        } 
+        return time;
    }
 
    /**

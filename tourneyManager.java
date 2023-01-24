@@ -27,8 +27,8 @@ public class tourneyManager {
                 matchObject match = pdfManager.matches.get(i);//obtaining a single match that contains two player names
 
                 //collecting players names into strings
-                String p1 = match.getPlayer1(); 
-                String p2 = match.getPlayer2();
+                String p1 = match.getP1().getName(); 
+                String p2 = match.getP2().getName();
 
                 matchFound = false;//initialize to false
 
@@ -36,10 +36,10 @@ public class tourneyManager {
 
                     //p1a1 stands for player 1 time availability 1 or start time
                     LocalTime p1a1 = pdfManager.players.get(p1).getStartAvail(j);
-                    LocalTime p1a2 = pdfManager.players.get(p1).getEndAvail(j);
+                    //LocalTime p1a2 = pdfManager.players.get(p1).getEndAvail(j);
 
                     LocalTime p2a1 = pdfManager.players.get(p2).getStartAvail(j);
-                    LocalTime p2a2 = pdfManager.players.get(p2).getEndAvail(j);
+                    //LocalTime p2a2 = pdfManager.players.get(p2).getEndAvail(j);
 
                     if(p1a1 != LocalTime.MIN && p2a1 != LocalTime.MIN){//if either player is available that day try to generate a match
 
@@ -51,32 +51,10 @@ public class tourneyManager {
                             if(pdfManager.players.get(p1).getMatchCounter() <= playerObject.MAX_MATCHES &&
                             pdfManager.players.get(p2).getMatchCounter() <= playerObject.MAX_MATCHES){
 
-                                //adding the duration of each match into a duration variable also accounting for a grace period
-                                Duration matchDuration = adminInfo.MATCH_DURATION;
-                                Duration gracePeriod = adminInfo.GRACE_PERIOD;
-
-                                //finding overlapping time to schedule a match
-                                LocalTime availStart = p1a1.isAfter(p2a1) ? p1a1 : p2a1;
-                                LocalTime availEnd = p1a2.isBefore(p2a2) ? p1a2 : p2a2;
-
-                                //checking if there is enough time for the match including a grace period 
-                                if(availStart.plus(matchDuration).plus(gracePeriod).isBefore(availEnd)){
-                                    LocalTime matchStart = availStart;//will be used for match scheudling 
-                                    match.setTime(matchStart);//setting the match objects time to found start
-
-                                    //adding the time into the players possible matches
-                                    pdfManager.players.get(p1).addGeneratedMatch(j, matchStart);
-                                    pdfManager.players.get(p2).addGeneratedMatch(j, matchStart);
-
-                                    //updating the amount of matches that each player has scheduled
-                                    pdfManager.players.get(p1).incrementMatchCounter();
-                                    pdfManager.players.get(p2).incrementMatchCounter();
-
-                                    scheduleMatchGeneration(match, utility.dayOfWeekMatchFound(j));
-
+                                boolean timeFound = timeValidity(match, j);
+                                if(timeFound){
                                     pdfManager.matchDeletion(p1, p2);//removing that pairings match from possible matches array list 
-                                    matchFound = true;//set boolean to true as match was generated
-                                    
+                                    matchFound = true;
                                 }
                                    
                             }
@@ -85,6 +63,55 @@ public class tourneyManager {
                 }
 
         }
+    }
+
+    /**
+     * Time validity checks and ensures that both players availability line up and have enough space for another match
+     * @param match match object containing match info as well as each players info
+     * @param day day the players availability could have a match
+     * @return true if the match can be generated
+     */
+    public static boolean timeValidity(matchObject match, int day){
+        
+        //obtaining the players names 
+        String p1 = match.getP1().getName();
+        String p2 = match.getP2().getName();
+
+        //obtaining players availability 
+        LocalTime p1a1 = match.getP1().getStartAvail(day);
+        LocalTime p1a2 = match.getP1().getEndAvail(day);
+
+        LocalTime p2a1 = match.getP2().getStartAvail(day);
+        LocalTime p2a2 = match.getP2().getEndAvail(day);
+
+        //adding the duration of each match into a duration variable also accounting for a grace period
+        Duration matchDuration = adminInfo.MATCH_DURATION;
+        Duration gracePeriod = adminInfo.GRACE_PERIOD;
+
+        //finding overlapping time to schedule a match
+        LocalTime availStart = p1a1.isAfter(p2a1) ? p1a1 : p2a1;
+        LocalTime availEnd = p1a2.isBefore(p2a2) ? p1a2 : p2a2;
+
+        //checking if there is enough time for the match including a grace period 
+        if(availStart.plus(matchDuration).plus(gracePeriod).isBefore(availEnd)){
+            LocalTime matchStart = availStart;//will be used for match scheudling 
+            match.setTime(matchStart);//setting the match objects time to found start
+
+            //adding the time into the players possible matches
+            //pdfManager.players.get(p1).addGeneratedMatch(day, matchStart);
+            //pdfManager.players.get(p2).addGeneratedMatch(day, matchStart);
+
+            //updating the amount of matches that each player has scheduled
+            pdfManager.players.get(p1).incrementMatchCounter();
+            pdfManager.players.get(p2).incrementMatchCounter();
+
+            scheduleMatchGeneration(match, utility.dayOfWeekMatchFound(day));
+
+            //pdfManager.matchDeletion(p1, p2);//removing that pairings match from possible matches array list 
+            return true;//set boolean to true as match was generated
+            
+        }
+        return false;
     }
 
     /**
@@ -102,27 +129,21 @@ public class tourneyManager {
             if(date.getDayOfWeek() == weekDay){
 
                 //if current day has no real match scheduled
-                if(schedule.get(date).getMatch(0).getTime() == LocalTime.MIN){
-                    schedule.get(date).removeMatch(0);//first remove the match from the array list
+                if(schedule.get(date).getDayMatchesSize() == 0){
+                    //schedule.get(date).removeMatch(0);//first remove the match from the array list
                     schedule.get(date).addMatch(match);//add the new match into the array list
                     matchAdded = true;//breaking out of for loop
 
                 } else {//if there are matches in the current date
-                        ///work in progress////
-                       
-                        schedule.get(date).matchTimeAdded(match.getTime());//adds the time into the hash map of match times
-
-                        //still have to check and ensure that a person cannot play the same day at the same time 
-
-
+     
+                    //account for player overlap
+                    if(schedule.get(date).verifyMatch(match)){
                         schedule.get(date).addMatch(match);//add the match to the date 
                         matchAdded = true;//breaking out of for loop
-
+                    }
                 }
             }
-
         }
-
     }
 
     /**

@@ -43,6 +43,8 @@ public class playerObject {
         this.email = email;
 
         this.availScore = Duration.ofMinutes(0);
+        
+        this.generatedMatches[0] = new ArrayList<LocalTime>();//initializing every slot within generated matches to have 0
 
         //collecting all of the players availability 
         for(int i = 0; i < avail.length; i++){
@@ -50,8 +52,6 @@ public class playerObject {
             //obtaining the availability scores and storing them into two different arrays 
             this.start[i] = utility.collectAvail(avail[i], true);
             this.end[i] = utility.collectAvail(avail[i], false);
-
-            this.generatedMatches[i] = new ArrayList<LocalTime>();//initializing every slot within generated matches to have 0
 
             if(start[i] != LocalTime.MIN && end[i] != LocalTime.MIN){//if player availability is not 00:00 then sum to score
                 this.availScore = getAvailScore().plusMinutes(Duration.between(start[i], end[i]).toMinutes());//obtaining the availability score as it is being collected
@@ -186,6 +186,9 @@ public class playerObject {
      * @return LocalTime array list size
      */
     public int getSingleDayNumOfMatches(int day){
+        if(generatedMatches[day] == null){
+            return 0;
+        }
         return generatedMatches[day].size();
     }
 

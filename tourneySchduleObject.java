@@ -1,31 +1,25 @@
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class tourneySchduleObject {
 
     private LocalDate scheduledDay;//holds day for given matches
     private ArrayList<matchObject> dayMatches = new ArrayList<>();//holds all matches for a given day
-    private HashMap<LocalTime, Integer> matchTimes = new HashMap<>();//holds all times for the matches of the day
-    private int todaysMatches;//keeps track of the amount of matches in one day
+    //go through array and check if match has started 
+    //sort by times as matches are added 
 
-    //private TreeMap<LocalTime, ArrayList<LocalTime>> matchTimes = new TreeMap<>();
-
+    
     /**
      * Class constructor used to keep track of the matches generated for a day under one single object
      * 
      * @param scheduledDay Will maintain the day the match will be added into
-     * @param match Will collect the match information when added in 
-     * 
      */
-    public tourneySchduleObject(LocalDate scheduledDay, matchObject match){
+    public tourneySchduleObject(LocalDate scheduledDay){
 
        this.scheduledDay = scheduledDay;
-       this.todaysMatches = 0;
-       dayMatches.add(todaysMatches, match);
-
     }
 
     /**
@@ -45,11 +39,14 @@ public class tourneySchduleObject {
     }
 
     /**
-     * Returns total matches for a given day 
-     * @return todays matches 
+     * Returns the day matches array size 
+     * @return day matches size
      */
-    public int getTodaysMatches(){
-        return todaysMatches;
+    public int getDayMatchesSize(){
+        if(this.dayMatches == null){
+            return 0;
+        } 
+        return this.dayMatches.size();
     }
 
     /**
@@ -57,7 +54,12 @@ public class tourneySchduleObject {
      * @param match Containd the new matches information
      */
     public void addMatch(matchObject match){
-        dayMatches.add(todaysMatches++, match);
+        if(this.dayMatches == null){
+            this.dayMatches = new ArrayList<>();
+            this.dayMatches.add(match);
+        } else {
+            this.dayMatches.add(match);
+        }
     }
 
     /**
@@ -78,66 +80,75 @@ public class tourneySchduleObject {
     }
 
     /**
-     * Will soley add a time to the objects hash map bsed on if the current times do not interfere
-     * @param time time to be added
+     * Will determine if a match is valid to be added into the arraylist of day matches 
+     * @param match match desired to be added
+     * @return true or false if can be added
      */
-    public void matchTimeAdded(LocalTime time){
-
-        if(!matchTimes.containsKey(time)){//if times hash map does not contain the time then add it
-            this.matchTimes.put(time, 1);//add it to the hash map
-        } else if (matchPossibility(time)){
-            int count = matchTimes.get(time);
-            this.matchTimes.put(time, count + 1);
-        }
-    }
-
-    /**
-     * Checks if there is time for a match based on: before and after the match time. If there is space then it return true
-     * @param time time that the match is set to occur
-     * @return true or false if there is time for the match
-     */
-    private boolean matchPossibility(LocalTime time){
-       LocalTime[] times = this.matchTimes.keySet().toArray(new LocalTime[matchTimes.size()]);
-        Arrays.sort(times);//sorting array 
-
-        Long mins = adminInfo.MATCH_DURATION.plus(adminInfo.GRACE_PERIOD).toMinutes();
-        LocalTime beforeMatch = time.minusMinutes(mins);
-        LocalTime afterMatch = time.plusMinutes(mins);
-
-        int before = closestIndex(times, beforeMatch);
-        int after = closestIndex(times, afterMatch);
+    public boolean verifyMatch(matchObject match){
         int count = 0;
-       
-        for(int i = before; i < after; i++){
-            if(this.matchTimes.get(times[i]) > 1){
-                count += this.matchTimes.get(times[i]);
-            } else {
-                count++;
+
+        //sorting the current matches in the day in ascending order 
+        Collections.sort(this.dayMatches, new Comparator<matchObject>(){
+            public int compare(matchObject m1, matchObject m2){
+                return m1.getTime().compareTo(m2.getTime());
+            }
+        });
+        
+        for(int i = 0; i < this.dayMatches.size(); i++){//iterate through the matches in the array list 
+            matchObject curMatch = this.dayMatches.get(i);//obtains match object from array of dayMatches
+
+            //if the current match time is the same as the match time to be added then this cannot occur more than 3 times
+            if(curMatch.getTime() == match.getTime()){
+
+                //checking if either player appears in any of the matches with the same time 
+                if(curMatch.getP1().getName() == match.getP1().getName() || curMatch.getP1().getName() == match.getP2().getName() |
+                curMatch.getP2().getName() == match.getP1().getName() || curMatch.getP2().getName() == match.getP2().getName()){
+
+                    //overlapping time. Now moves match start time and rechecks verifyMatch
+                    //return moveMatchTime(match);
+                    return false;
+
+                } else {
+                    count++;//increment to keep track of how many times this appears 
+                }
+            }
+
+            //accounts for if there are already too many counts that have been found
+            if(count > 3){
+                return false;//there are already too many times with the same start in the dayMatches array list
+
             }
         }
-
-        if(count < adminInfo.POOL_TABLES){
-            return true;
-        }
-        return false;
+        return true;//there is space for another new match
 
     }
 
     /**
-     * Returns the closest index or exact index of a time in order to verify if a match has enough time to occur
-     * @param times time that the match is set to occur
-     * @param beforeOrAfter determines which time either before or after is attempting to be found
-     * @return either exact or closest index of the before or after time 
+     * Moves a match time forward to see if that time can then be added into the array list. Calls verifyMatch to do this
+     * @param match match whos time has to be moved forward 
+     * @return true or false if the time can be added 
      */
-    private int closestIndex(LocalTime[] times, LocalTime beforeOrAfter){
-
-        int index = Arrays.binarySearch(times, beforeOrAfter, LocalTime::compareTo);
+    public boolean moveMatchTime(matchObject match){
         
-        if(index < 0){
-            index = -(index + 1);
-        }
+        //adding the total match time into the new time for the match
+        LocalTime newTime = match.getTime().plus(adminInfo.MATCH_DURATION).plus(adminInfo.GRACE_PERIOD);
 
-        return index;
+        ////
+        //have to account for if each players time does still fall witin the new start time and end time 
+        ////
+
+        int day = utility.weekDayToInt(match.getMatchDate());
+
+        //tourneyManager.timeValidity(match, day);
+        //have to make sure each player still has time to move the match time 
+
+        match.setTime(newTime);//setting match start time as a new start time 
+
+        //checking to see if the match can be added 
+        if(verifyMatch(match)){
+            return true;//can be added
+        } 
+        return false;//cannot be added
     }
 
     /**
@@ -145,13 +156,13 @@ public class tourneySchduleObject {
      */
     public void displayMatches(){
 
-        if(todaysMatches > 0){//if matches were generated and added for today
+        if(this.dayMatches.size() > 0){//if matches were generated and added for today
             System.out.println("On: " + scheduledDay.toString());//printing the day of the matches
 
-            for(int i = 0; i < todaysMatches; i++){//itterate through all generated matches
+            for(int i = 0; i < this.dayMatches.size(); i++){//itterate through all generated matches
 
-                System.out.println(dayMatches.get(i).getPlayer1() + " will play againt " + dayMatches.get(i).getPlayer2() + 
-                " at " + dayMatches.get(i).getTime());
+                System.out.println(this.dayMatches.get(i).getP1().getName() + " will play againt " + dayMatches.get(i).getP2().getName() + 
+                " at " + this.dayMatches.get(i).getStandardTime());
             }
 
         } else {

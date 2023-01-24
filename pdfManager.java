@@ -43,12 +43,8 @@ public class pdfManager {
                 matchPairGen();//generates a unique list of pair players 
                 matchDayGen();//generates an array list of playable days in the tournament, excluding weekends
 
-                tourneyManager.matchTimeGeneration();//generate match times for all players
-
                 //debug.displayAllPlayers();
-
-                //System.out.println("All matches left: ");
-                //debug.displayMatches();
+                tourneyManager.matchTimeGeneration();//generate match times for all players
 
                 tourneyManager.displayTourneySchedule();;
 
@@ -107,12 +103,12 @@ public class pdfManager {
         //generating the players matches based on thier scores 
         for(int i = 0; i < names.size(); i++){//iterates through the entire array list of names
             for(int j = i + 1; j < names.size(); j++){//iterates through the following name after i 
-                matches.add(new matchObject(names.get(i), names.get(j)));//adding the pair into the match object
+                matches.add(new matchObject(players.get(names.get(i)), players.get(names.get(j))));//adding the pair into the match object
 
             }
         }
 
-    }//end of match pair generation
+    }
 
     /**
      * Will generate all possible days that matches can be held and stores them in a hashmap of tourneyScheduleObjects
@@ -131,7 +127,7 @@ public class pdfManager {
                startDay.getDayOfWeek() != DayOfWeek.SUNDAY){
 
                 //adding the days available for scheduling into the tournament manager schedule with an empty tourneyScheduleObject
-                tourneyManager.schedule.put(startDay, new tourneySchduleObject(startDay, new matchObject()));
+                tourneyManager.schedule.put(startDay, new tourneySchduleObject(startDay));
 
                 startDay = startDay.plusDays(1);//itterates through to next day
 
@@ -151,8 +147,8 @@ public class pdfManager {
     public static void matchDeletion(String player1, String player2){
 
         //if both names are found within the array list of matches then remove the match
-        matches.removeIf(match -> (match.getPlayer1().equals(player1) && match.getPlayer2().equals(player2)) ||
-        (match.getPlayer1().equals(player2) && match.getPlayer1().equals(player1)));
+        matches.removeIf(match -> (match.getP1().getName().equals(player1) && match.getP2().getName().equals(player2)) ||
+        (match.getP1().getName().equals(player2) && match.getP2().getName().equals(player1)));
 
     }
 

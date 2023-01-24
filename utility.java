@@ -1,4 +1,5 @@
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,7 +21,6 @@ public class utility {
 
             if(firstAvail){//if first time
                 return convertLocal(parts[0]);
-
             } else {//if second time
                 return convertLocal(parts[1]);
             }
@@ -86,9 +86,10 @@ public class utility {
         //obtain colons position if it exists 
         colon = avail.indexOf(":");
 
-        if(colon != -1){//no minutes are found
-            minutes = avail.substring(colon, colon + 3);//obtains the minutes including the colon ex ":30"
+        if(colon != -1){//if minutes are found
+            //minutes = avail.substring(colon, colon + 3);//obtains the minutes including the colon ex ":30"
 
+            minutes = ":30";//ensring everyones minute availability is 30 or an hour exactly 
         }
         return minutes;//return minutes at end 
 
@@ -114,6 +115,30 @@ public class utility {
                 return DayOfWeek.FRIDAY;
             default: 
                 return DayOfWeek.SUNDAY;
+        }
+    }
+
+    /**
+     * Obtains a date, obtains the dates day of the week and returns it as an int to represent the slot of a players start and end 
+     * availability 
+     * @param date date to obtain day of the week from 
+     * @return integer 0-4 if valid or 5 if invalid day of the week
+     */
+    public static int weekDayToInt(LocalDate date){
+        DayOfWeek day = date.getDayOfWeek();
+        switch(day){
+            case MONDAY: 
+                return 0;
+            case TUESDAY: 
+                return 1;
+            case WEDNESDAY: 
+                return 2;
+            case THURSDAY: 
+                return 3;
+            case FRIDAY: 
+                return 4;
+            default: 
+                return 5;
         }
     }
 
