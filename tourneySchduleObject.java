@@ -105,7 +105,7 @@ public class tourneySchduleObject {
                 curMatch.getP2().getName() == match.getP1().getName() || curMatch.getP2().getName() == match.getP2().getName()){
 
                     //overlapping time. Now moves match start time and rechecks verifyMatch
-                    //return moveMatchTime(match);
+                    //return moveMatchTime(match, getScheduledDay());
                     return false;
 
                 } else {
@@ -126,28 +126,29 @@ public class tourneySchduleObject {
     /**
      * Moves a match time forward to see if that time can then be added into the array list. Calls verifyMatch to do this
      * @param match match whos time has to be moved forward 
+     * @param date date that match should take place on 
      * @return true or false if the time can be added 
      */
-    public boolean moveMatchTime(matchObject match){
+    public boolean moveMatchTime(matchObject match, LocalDate date){
         
         //adding the total match time into the new time for the match
         LocalTime newTime = match.getTime().plus(adminInfo.MATCH_DURATION).plus(adminInfo.GRACE_PERIOD);
 
-        ////
-        //have to account for if each players time does still fall witin the new start time and end time 
-        ////
-
-        int day = utility.weekDayToInt(match.getMatchDate());
-
-        //tourneyManager.timeValidity(match, day);
-        //have to make sure each player still has time to move the match time 
+        int day = utility.weekDayToInt(date);
 
         match.setTime(newTime);//setting match start time as a new start time 
 
-        //checking to see if the match can be added 
-        if(verifyMatch(match)){
-            return true;//can be added
-        } 
+        //ensuring that after the match time is moved, that both players are still available 
+        //have to change the function to now account for the new match time 
+        if(tourneyManager.timeValidity(match, day)){
+            //checking to see if the match can be added 
+            if(verifyMatch(match)){
+                pdfManager.matchDeletion(match.getP1().getName(), match.getP2().getName());//removing that pairings match from possible matches array list 
+                return true;//match can be added
+
+            } 
+        }
+
         return false;//cannot be added
     }
 

@@ -125,8 +125,8 @@ public class utility {
      * @return integer 0-4 if valid or 5 if invalid day of the week
      */
     public static int weekDayToInt(LocalDate date){
-        DayOfWeek day = date.getDayOfWeek();
-        switch(day){
+        //DayOfWeek day = date.getDayOfWeek();
+        switch(date.getDayOfWeek()){
             case MONDAY: 
                 return 0;
             case TUESDAY: 

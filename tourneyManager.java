@@ -1,6 +1,5 @@
 import java.util.HashMap;
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -51,8 +50,7 @@ public class tourneyManager {
                             if(pdfManager.players.get(p1).getMatchCounter() <= playerObject.MAX_MATCHES &&
                             pdfManager.players.get(p2).getMatchCounter() <= playerObject.MAX_MATCHES){
 
-                                boolean timeFound = timeValidity(match, j);
-                                if(timeFound){
+                                if(timeValidity(match, j)){
                                     pdfManager.matchDeletion(p1, p2);//removing that pairings match from possible matches array list 
                                     matchFound = true;
                                 }
@@ -77,29 +75,13 @@ public class tourneyManager {
         String p1 = match.getP1().getName();
         String p2 = match.getP2().getName();
 
-        //obtaining players availability 
-        LocalTime p1a1 = match.getP1().getStartAvail(day);
-        LocalTime p1a2 = match.getP1().getEndAvail(day);
+        //obtaining the time for a match if found, if no time is found, the function returns LocalTime.MIN
+        LocalTime availStart = match.matchPossibility(day);
 
-        LocalTime p2a1 = match.getP2().getStartAvail(day);
-        LocalTime p2a2 = match.getP2().getEndAvail(day);
-
-        //adding the duration of each match into a duration variable also accounting for a grace period
-        Duration matchDuration = adminInfo.MATCH_DURATION;
-        Duration gracePeriod = adminInfo.GRACE_PERIOD;
-
-        //finding overlapping time to schedule a match
-        LocalTime availStart = p1a1.isAfter(p2a1) ? p1a1 : p2a1;
-        LocalTime availEnd = p1a2.isBefore(p2a2) ? p1a2 : p2a2;
-
-        //checking if there is enough time for the match including a grace period 
-        if(availStart.plus(matchDuration).plus(gracePeriod).isBefore(availEnd)){
+        //if there is time found for a match
+        if(availStart != LocalTime.MIN){
             LocalTime matchStart = availStart;//will be used for match scheudling 
             match.setTime(matchStart);//setting the match objects time to found start
-
-            //adding the time into the players possible matches
-            //pdfManager.players.get(p1).addGeneratedMatch(day, matchStart);
-            //pdfManager.players.get(p2).addGeneratedMatch(day, matchStart);
 
             //updating the amount of matches that each player has scheduled
             pdfManager.players.get(p1).incrementMatchCounter();
@@ -107,15 +89,16 @@ public class tourneyManager {
 
             scheduleMatchGeneration(match, utility.dayOfWeekMatchFound(day));
 
-            //pdfManager.matchDeletion(p1, p2);//removing that pairings match from possible matches array list 
-            return true;//set boolean to true as match was generated
-            
+            return true;//set boolean to true as match was generated 
         }
+        
         return false;
     }
 
     /**
-     * In progress 
+     * Obtains all playable dates from the schedule hashmap and itterates through to generate matches on each individual day
+     * @param match identifies the match that is desired to be added 
+     * @param weekDay identifies the day of the week that the match should be added to, found from player availability 
      */
     public static void scheduleMatchGeneration(matchObject match, DayOfWeek weekDay){
 
@@ -136,7 +119,7 @@ public class tourneyManager {
 
                 } else {//if there are matches in the current date
      
-                    //account for player overlap
+                    //accounts for player overlap
                     if(schedule.get(date).verifyMatch(match)){
                         schedule.get(date).addMatch(match);//add the match to the date 
                         matchAdded = true;//breaking out of for loop
